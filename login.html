@@ -6,7 +6,17 @@
     <title>DAR Admin Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-50 flex items-center justify-center min-h-screen">
+<body class="bg-slate-50 flex items-center justify-center min-h-screen relative">
+
+    <div class="absolute top-8 left-8">
+        <a href="index.html" class="flex items-center space-x-2 text-slate-500 hover:text-green-700 transition-colors font-medium group">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            <span>Back to Portal</span>
+        </a>
+    </div>
+
     <div class="bg-white p-10 rounded-[2rem] shadow-2xl w-full max-w-md border border-slate-100">
         <div class="text-center mb-8">
             <h1 class="text-3xl font-bold text-slate-900">Admin Access</h1>
@@ -16,25 +26,41 @@
         <form id="loginForm" class="space-y-6">
             <div>
                 <label class="block text-sm font-bold text-slate-700 mb-2">Email Address</label>
-                <input type="email" id="email" required class="w-full px-5 py-4 rounded-xl border border-slate-200 focus:ring-4 focus:ring-green-500/10 focus:border-green-600 outline-none transition-all">
+                <input type="email" id="email" required class="w-full px-5 py-4 rounded-xl border border-slate-200 focus:ring-4 focus:ring-green-500/10 focus:border-green-600 outline-none transition-all" placeholder="admin@dar.gov.ph">
             </div>
             <div>
                 <label class="block text-sm font-bold text-slate-700 mb-2">Password</label>
-                <input type="password" id="password" required class="w-full px-5 py-4 rounded-xl border border-slate-200 focus:ring-4 focus:ring-green-500/10 focus:border-green-600 outline-none transition-all">
+                <input type="password" id="password" required class="w-full px-5 py-4 rounded-xl border border-slate-200 focus:ring-4 focus:ring-green-500/10 focus:border-green-600 outline-none transition-all" placeholder="••••••••">
             </div>
-            <button type="submit" class="w-full bg-green-600 text-white font-bold py-4 rounded-xl hover:bg-green-700 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-green-600/20">
+            <button type="submit" id="signInBtn" class="w-full bg-green-600 text-white font-bold py-4 rounded-xl hover:bg-green-700 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-green-600/20">
                 Sign In
             </button>
         </form>
+        
         <p id="message" class="mt-6 text-center text-sm text-red-500 hidden"></p>
     </div>
+
+    <script>
+        // Simple test logic to see if it's "functional"
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Stop page from refreshing
+            
+            const btn = document.getElementById('signInBtn');
+            const msg = document.getElementById('message');
+            
+            // Show "Loading" state
+            btn.innerText = "Checking...";
+            btn.disabled = true;
+
+            // Simulate a delay (like a real server check)
+            setTimeout(() => {
+                msg.classList.remove('hidden');
+                msg.innerText = "Error: Database not connected. Please proceed to Step 3 (Firebase).";
+                btn.innerText = "Sign In";
+                btn.disabled = false;
+            }, 1500);
+        });
+    </script>
+
 </body>
-<div class="absolute top-8 left-8 z-50">
-    <a href="index.html" class="flex items-center space-x-2 text-slate-500 hover:text-green-700 transition-colors font-medium">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-        </svg>
-        <span>Back to Portal</span>
-    </a>
-</div>
 </html>
