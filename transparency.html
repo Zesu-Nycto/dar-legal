@@ -10,10 +10,34 @@
         body { font-family: 'Inter', sans-serif; }
         .serif { font-family: 'Instrument Serif', serif; }
         .hero-gradient { background: linear-gradient(to bottom, #f0fdf4, #ffffff); }
+
+        .doc-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .doc-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        }
+
+        .stat-counter {
+            font-variant-numeric: tabular-nums;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
     </style>
 </head>
 <body class="bg-white text-slate-900">
 
+    <!-- NAV -->
     <nav class="flex justify-between items-center px-12 py-6 bg-green-600 text-white shadow-md relative z-50 rounded-bl-3xl rounded-br-3xl">
         <div class="flex items-center space-x-4">
             <img src="Assets/images/logo.png" alt="DAR Logo" class="h-14 w-auto object-contain">
@@ -22,23 +46,19 @@
                 <span class="font-medium text-green-100 text-sm normal-case tracking-wide">Legal Division</span>
             </div>
         </div>
-
         <div class="hidden md:flex items-center space-x-4 text-sm font-medium">
             <a href="index.html" class="relative group px-4 py-2">
                 <span class="relative z-10 group-hover:text-green-900 transition-colors">Home</span>
                 <div class="absolute inset-0 bg-green-300 scale-y-0 origin-bottom group-hover:scale-y-100 transition-transform duration-300 rounded-sm"></div>
             </a>
-            
-            <a href="transparency.html" class="relative group px-4 py-2 text-green-900">
-                <span class="relative z-10">Transparency</span>
-                <div class="absolute inset-0 bg-green-300 rounded-sm"></div>
+            <a href="transparency.html" class="relative group px-4 py-2">
+                <span class="relative z-10 text-green-200 font-semibold">Transparency</span>
+                <div class="absolute inset-0 bg-green-300 scale-y-100 origin-bottom transition-transform duration-300 rounded-sm opacity-30"></div>
             </a>
-
             <a href="aboutus.html" class="relative group px-4 py-2">
                 <span class="relative z-10 group-hover:text-green-900 transition-colors">About Us</span>
                 <div class="absolute inset-0 bg-green-300 scale-y-0 origin-bottom group-hover:scale-y-100 transition-transform duration-300 rounded-sm"></div>
             </a>
-            
             <button onclick="window.location.href='login.html'"
                     class="bg-white/80 border border-slate-200 text-slate-900 px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-white hover:scale-105 transition-all">
                 Admin Login →
@@ -46,71 +66,231 @@
         </div>
     </nav>
 
-    <section class="hero-gradient pt-24 pb-12 px-6 text-center">
-        <div class="max-w-5xl mx-auto">
+    <!-- HERO -->
+    <section class="hero-gradient pt-20 pb-16 px-6 text-center relative overflow-hidden">
+        <div class="max-w-4xl mx-auto relative z-10">
+            <div class="inline-flex items-center gap-2 bg-green-100 text-green-800 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest mb-6">
+                <span class="w-1.5 h-1.5 rounded-full bg-green-600 inline-block"></span>
+                Section 93 · General Appropriations Act
+            </div>
             <h1 class="text-6xl md:text-7xl serif leading-tight mb-6 text-slate-900">
                 Transparency Seal
             </h1>
-            <p class="text-lg text-slate-600 max-w-2xl mx-auto font-medium">
-                In compliance with Section 93 of the General Appropriations Act, we maintain this portal for public disclosure of official records and reports.
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto font-medium leading-relaxed">
+                The DAR Legal Division is committed to open governance. All official records, reports, and public documents are made available here in compliance with national transparency mandates.
             </p>
         </div>
     </section>
 
-    <section class="max-w-7xl mx-auto py-20 px-12">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            
-            <div class="group p-8 bg-white border border-slate-200 rounded-3xl hover:shadow-xl transition-all relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-1 h-full bg-green-600"></div>
-                <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-6 text-green-700">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+    <!-- STATS STRIP -->
+    <section class="border-y border-slate-100 bg-slate-50 py-10 px-6">
+        <div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            <div>
+                <div class="text-4xl font-light text-slate-900 stat-counter">84.2%</div>
+                <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mt-2">Resolution Rate</p>
+            </div>
+            <div>
+                <div class="text-4xl font-light text-slate-900 stat-counter">1,248</div>
+                <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mt-2">Active Cases</p>
+            </div>
+            <div>
+                <div class="text-4xl font-light text-green-600 stat-counter">12</div>
+                <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mt-2">Pending Review</p>
+            </div>
+            <div>
+                <div class="text-4xl font-light text-slate-900 stat-counter">2026</div>
+                <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mt-2">Current Year</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN DOCUMENTS SECTION -->
+    <section class="max-w-6xl mx-auto py-24 px-12">
+
+        <div class="mb-14">
+            <span class="text-xs font-bold tracking-widest uppercase text-green-700">Public Disclosures</span>
+            <h2 class="text-4xl serif mt-3 text-slate-900">Official Documents & Reports</h2>
+            <p class="text-slate-500 mt-3 text-base max-w-xl">Access all mandated disclosures, legal documents, and performance reports of the Legal Division.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+            <!-- FOI Manual -->
+            <div class="doc-card bg-white border border-slate-200 rounded-2xl p-8 relative overflow-hidden flex flex-col">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-green-600 rounded-t-2xl"></div>
+                <div class="w-12 h-12 bg-green-50 border border-green-100 rounded-xl flex items-center justify-center mb-6">
+                    <svg class="w-5 h-5 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
                 </div>
-                <h3 class="text-xl font-bold mb-3">FOI Manual</h3>
-                <p class="text-slate-600 mb-6 text-sm">Official procedures for requesting public documents and legal information.</p>
-                <a href="#" class="text-green-600 font-bold text-xs uppercase tracking-widest hover:underline">Download PDF →</a>
+                <span class="pill bg-green-50 text-green-800 mb-4 self-start">FOI</span>
+                <h3 class="text-xl font-bold mb-2 text-slate-900">FOI Manual</h3>
+                <p class="text-slate-500 text-sm leading-relaxed flex-1">Official procedures and guidelines for requesting public documents, legal records, and information from the Legal Division.</p>
+                <div class="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between">
+                    <span class="text-xs text-slate-400 font-medium">Updated: 2026</span>
+                    <a href="#" class="flex items-center gap-1.5 text-green-700 font-bold text-xs uppercase tracking-widest hover:text-green-900 transition-colors">
+                        Download PDF
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                    </a>
+                </div>
             </div>
 
-            <div class="group p-8 bg-white border border-slate-200 rounded-3xl hover:shadow-xl transition-all relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-1 h-full bg-blue-600"></div>
-                <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-6 text-blue-700">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+            <!-- Citizen's Charter -->
+            <div class="doc-card bg-white border border-slate-200 rounded-2xl p-8 relative overflow-hidden flex flex-col">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-blue-600 rounded-t-2xl"></div>
+                <div class="w-12 h-12 bg-blue-50 border border-blue-100 rounded-xl flex items-center justify-center mb-6">
+                    <svg class="w-5 h-5 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
                 </div>
-                <h3 class="text-xl font-bold mb-3">Citizen's Charter</h3>
-                <p class="text-slate-600 mb-6 text-sm">Step-by-step guides for filing cases and legal service processing times.</p>
-                <a href="#" class="text-blue-600 font-bold text-xs uppercase tracking-widest hover:underline">View Services →</a>
+                <span class="pill bg-blue-50 text-blue-800 mb-4 self-start">Charter</span>
+                <h3 class="text-xl font-bold mb-2 text-slate-900">Citizen's Charter</h3>
+                <p class="text-slate-500 text-sm leading-relaxed flex-1">Step-by-step guides for filing cases, legal service timelines, and the rights of every citizen transacting with the Legal Division.</p>
+                <div class="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between">
+                    <span class="text-xs text-slate-400 font-medium">Updated: 2026</span>
+                    <a href="#" class="flex items-center gap-1.5 text-blue-700 font-bold text-xs uppercase tracking-widest hover:text-blue-900 transition-colors">
+                        View Services
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                    </a>
+                </div>
             </div>
 
-            <div class="group p-8 bg-white border border-slate-200 rounded-3xl hover:shadow-xl transition-all relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-1 h-full bg-amber-600"></div>
-                <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center mb-6 text-amber-700">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+            <!-- Legal Statistics -->
+            <div class="doc-card bg-white border border-slate-200 rounded-2xl p-8 relative overflow-hidden flex flex-col">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-amber-500 rounded-t-2xl"></div>
+                <div class="w-12 h-12 bg-amber-50 border border-amber-100 rounded-xl flex items-center justify-center mb-6">
+                    <svg class="w-5 h-5 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                    </svg>
                 </div>
-                <h3 class="text-xl font-bold mb-3">Legal Statistics</h3>
-                <p class="text-slate-600 mb-6 text-sm">Monthly resolution rates and performance metrics for our legal divisions.</p>
-                <a href="#" class="text-amber-600 font-bold text-xs uppercase tracking-widest hover:underline">Browse Reports →</a>
+                <span class="pill bg-amber-50 text-amber-800 mb-4 self-start">Statistics</span>
+                <h3 class="text-xl font-bold mb-2 text-slate-900">Legal Statistics</h3>
+                <p class="text-slate-500 text-sm leading-relaxed flex-1">Monthly resolution rates, case filing data, and performance metrics for the Legal Division's operations and case management.</p>
+                <div class="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between">
+                    <span class="text-xs text-slate-400 font-medium">Updated: Monthly</span>
+                    <a href="#" class="flex items-center gap-1.5 text-amber-700 font-bold text-xs uppercase tracking-widest hover:text-amber-900 transition-colors">
+                        Browse Reports
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                    </a>
+                </div>
             </div>
 
         </div>
     </section>
 
+    <!-- ADDITIONAL TRANSPARENCY ITEMS -->
+    <section class="bg-slate-50 border-t border-slate-100 py-24 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="mb-14 text-center">
+                <span class="text-xs font-bold tracking-widest uppercase text-green-700">More Disclosures</span>
+                <h2 class="text-4xl serif mt-3 text-slate-900">Additional Public Records</h2>
+                <p class="text-slate-500 mt-3 text-base max-w-xl mx-auto">Other mandated documents and reports available to the public.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+                <div class="doc-card bg-white border border-slate-200 rounded-2xl p-6 flex items-start gap-5">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center flex-shrink-0">
+                        <svg class="w-4 h-4 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-bold text-slate-900 mb-1">Annual Reports</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed">Year-end summaries of legal division accomplishments, case dispositions, and program performance.</p>
+                        <a href="#" class="mt-3 inline-flex items-center gap-1 text-emerald-700 font-bold text-xs uppercase tracking-widest hover:text-emerald-900 transition-colors">
+                            View Reports →
+                        </a>
+                    </div>
+                </div>
+
+                <div class="doc-card bg-white border border-slate-200 rounded-2xl p-6 flex items-start gap-5">
+                    <div class="w-10 h-10 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center flex-shrink-0">
+                        <svg class="w-4 h-4 text-purple-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/>
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-bold text-slate-900 mb-1">Legal Opinions & Resolutions</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed">Published rulings, legal opinions, and resolutions issued by the Legal Division on agrarian matters.</p>
+                        <a href="#" class="mt-3 inline-flex items-center gap-1 text-purple-700 font-bold text-xs uppercase tracking-widest hover:text-purple-900 transition-colors">
+                            Browse →
+                        </a>
+                    </div>
+                </div>
+
+                <div class="doc-card bg-white border border-slate-200 rounded-2xl p-6 flex items-start gap-5">
+                    <div class="w-10 h-10 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center flex-shrink-0">
+                        <svg class="w-4 h-4 text-orange-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-bold text-slate-900 mb-1">Budget & Financial Reports</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed">Appropriations, disbursements, and financial accountability reports in compliance with COA regulations.</p>
+                        <a href="#" class="mt-3 inline-flex items-center gap-1 text-orange-700 font-bold text-xs uppercase tracking-widest hover:text-orange-900 transition-colors">
+                            View Financials →
+                        </a>
+                    </div>
+                </div>
+
+                <div class="doc-card bg-white border border-slate-200 rounded-2xl p-6 flex items-start gap-5">
+                    <div class="w-10 h-10 rounded-xl bg-sky-50 border border-sky-100 flex items-center justify-center flex-shrink-0">
+                        <svg class="w-4 h-4 text-sky-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-bold text-slate-900 mb-1">SALN Disclosures</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed">Statement of Assets, Liabilities, and Net Worth of division personnel as required under RA 6713.</p>
+                        <a href="#" class="mt-3 inline-flex items-center gap-1 text-sky-700 font-bold text-xs uppercase tracking-widest hover:text-sky-900 transition-colors">
+                            View SALN →
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FOI REQUEST BANNER -->
+    <section class="bg-emerald-950 py-20 px-6">
+        <div class="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-10">
+            <div>
+                <span class="text-xs font-bold tracking-widest uppercase text-emerald-400 block mb-3">Freedom of Information</span>
+                <h2 class="text-3xl serif text-white leading-snug">Can't find what you're looking for?</h2>
+                <p class="text-emerald-200 mt-3 text-base leading-relaxed max-w-lg">Submit a formal FOI request and our division will respond within the prescribed period under EO 2, s. 2016.</p>
+            </div>
+            <div class="flex flex-col gap-3 flex-shrink-0">
+                <a href="#" class="bg-white text-emerald-950 px-8 py-4 rounded-full text-sm font-bold text-center hover:bg-green-50 transition-all whitespace-nowrap">
+                    Submit an FOI Request
+                </a>
+                <a href="#" class="border border-emerald-600 text-emerald-200 px-8 py-4 rounded-full text-sm font-bold text-center hover:bg-emerald-900 transition-all whitespace-nowrap">
+                    Learn About FOI →
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
     <footer class="bg-slate-50 border-t border-slate-100 py-6 px-12">
         <div class="max-w-[90rem] mx-auto">
             <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
                 <div class="flex items-center space-x-3">
-                    <img src="Assets/images/logo.png" alt="DAR Logo" class="h-8 w-auto opacity-70 grayscale">
+                    <img src="Assets/images/logo.png" alt="DAR Logo" class="h-8 w-auto opacity-70 grayscale hover:grayscale-0 transition-all">
                     <div class="flex flex-col">
                         <span class="text-xs font-bold tracking-tight uppercase text-slate-900">Department of Agrarian Reform</span>
                         <span class="text-[10px] text-slate-600 uppercase tracking-widest leading-none">Legal Division</span>
                     </div>
                 </div>
                 <div class="flex space-x-6 text-[10px] font-bold uppercase tracking-widest text-slate-500">
-                    <a href="#" class="hover:text-green-700 transition-colors">Privacy</a>
-                    <a href="#" class="hover:text-green-700 transition-colors">Terms</a>
-                    <a href="#" class="hover:text-green-700 transition-colors">Contact</a>
+                    <a href="#" class="hover:text-emerald-700 transition-colors">Privacy</a>
+                    <a href="#" class="hover:text-emerald-700 transition-colors">Terms</a>
+                    <a href="aboutus.html" class="hover:text-emerald-700 transition-colors">Contact</a>
                 </div>
             </div>
             <div class="border-t border-slate-200/50 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
-                <p class="text-[11px] text-slate-500 font-medium">© 2026 DAR. All rights reserved.</p>
+                <p class="text-[11px] text-slate-500 font-medium">&copy; 2026 DAR. All rights reserved.</p>
                 <div class="flex items-center space-x-2">
                     <div class="w-1.5 h-1.5 rounded-full bg-emerald-500/50"></div>
                     <span class="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em]">Official Government Portal</span>
