@@ -10,10 +10,29 @@
         body { font-family: 'Inter', sans-serif; }
         .serif { font-family: 'Instrument Serif', serif; }
         .hero-gradient { background: linear-gradient(to bottom, #f0fdf4, #ffffff); }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.05rem;
+            top: 0.4rem;
+            width: 0.85rem;
+            height: 0.85rem;
+            background: #16a34a;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px #16a34a;
+        }
+
+        .member-card:hover .member-avatar {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+        }
     </style>
 </head>
 <body class="bg-white text-slate-900">
 
+    <!-- NAV -->
     <nav class="flex justify-between items-center px-12 py-6 bg-green-600 text-white shadow-md relative z-50 rounded-bl-3xl rounded-br-3xl">
         <div class="flex items-center space-x-4">
             <img src="Assets/images/logo.png" alt="DAR Logo" class="h-14 w-auto object-contain">
@@ -28,17 +47,14 @@
                 <span class="relative z-10 group-hover:text-green-900 transition-colors">Home</span>
                 <div class="absolute inset-0 bg-green-300 scale-y-0 origin-bottom group-hover:scale-y-100 transition-transform duration-300 rounded-sm"></div>
             </a>
-            
-            <a href="transparency.html" class="relative group px-4 py-2">
+            <a href="#" class="relative group px-4 py-2">
                 <span class="relative z-10 group-hover:text-green-900 transition-colors">Transparency</span>
                 <div class="absolute inset-0 bg-green-300 scale-y-0 origin-bottom group-hover:scale-y-100 transition-transform duration-300 rounded-sm"></div>
             </a>
-
-            <a href="aboutus.html" class="relative group px-4 py-2 text-green-900">
-                <span class="relative z-10">About Us</span>
-                <div class="absolute inset-0 bg-green-300 rounded-sm"></div>
+            <a href="aboutus.html" class="relative group px-4 py-2">
+                <span class="relative z-10 text-green-200 font-semibold">About Us</span>
+                <div class="absolute inset-0 bg-green-300 scale-y-100 origin-bottom transition-transform duration-300 rounded-sm opacity-30"></div>
             </a>
-            
             <button onclick="window.location.href='login.html'"
                     class="bg-white/80 border border-slate-200 text-slate-900 px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-white hover:scale-105 transition-all">
                 Admin Login →
@@ -46,55 +62,294 @@
         </div>
     </nav>
 
-    <section class="hero-gradient pt-24 pb-16 px-6 text-center">
-        <div class="max-w-5xl mx-auto">
-            <h1 class="text-6xl md:text-8xl serif leading-tight mb-8 text-slate-900">
-                Our Story & Commitment
+    <!-- HERO -->
+    <section class="hero-gradient pt-20 pb-16 px-6 text-center">
+        <div class="max-w-4xl mx-auto">
+            <span class="text-xs font-bold tracking-widest uppercase text-green-700">Who We Are</span>
+            <h1 class="text-6xl md:text-7xl serif leading-tight mt-4 mb-6 text-slate-900">
+                About the Legal Division
             </h1>
-            <p class="text-xl text-slate-700 max-w-3xl mx-auto mb-12 font-medium">
-                The DAR Legal Division is dedicated to providing efficient and impartial legal services to safeguard the rights of agrarian reform beneficiaries.
+            <p class="text-xl text-slate-600 max-w-2xl mx-auto font-medium leading-relaxed">
+                Committed to upholding agrarian justice through principled legal service, dedicated public servants, and unwavering adherence to the law.
             </p>
         </div>
     </section>
 
-    <section class="max-w-7xl mx-auto py-20 px-12">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+    <!-- HISTORY SECTION -->
+    <section class="max-w-5xl mx-auto px-12 py-20">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
             <div>
-                <h2 class="text-4xl font-bold mb-6 text-slate-900">Upholding Justice in the Countryside</h2>
-                <p class="text-slate-600 leading-relaxed mb-6">
-                    Our team of dedicated legal professionals works tirelessly to ensure that land ownership disputes are resolved fairly and that the Department's policies are implemented with the highest degree of integrity.
-                </p>
-                <div class="space-y-4">
-                    <div class="flex items-start space-x-3">
-                        <div class="mt-1 w-5 h-5 bg-green-100 rounded-full flex items-center justify-center">
-                            <div class="w-2 h-2 bg-green-600 rounded-full"></div>
-                        </div>
-                        <p class="text-sm font-medium text-slate-700">Dedicated to farmer protection and land security.</p>
+                <span class="text-xs font-bold tracking-widest uppercase text-green-700">Our History</span>
+                <h2 class="text-4xl serif mt-4 mb-8 leading-tight text-slate-900">A legacy of agrarian justice</h2>
+
+                <div class="border-l-2 border-green-200 pl-8 space-y-10 relative">
+                    <div class="timeline-item relative">
+                        <span class="text-xs font-bold text-green-700 uppercase tracking-widest">1988</span>
+                        <h3 class="font-semibold text-lg mt-1 text-slate-900">Establishment of DAR</h3>
+                        <p class="text-slate-600 mt-2 leading-relaxed">The Department of Agrarian Reform was established under Republic Act No. 6657, known as the Comprehensive Agrarian Reform Law (CARL), to carry out land redistribution across the Philippines.</p>
                     </div>
-                    <div class="flex items-start space-x-3">
-                        <div class="mt-1 w-5 h-5 bg-green-100 rounded-full flex items-center justify-center">
-                            <div class="w-2 h-2 bg-green-600 rounded-full"></div>
-                        </div>
-                        <p class="text-sm font-medium text-slate-700">Providing fast and reliable case monitoring systems.</p>
+                    <div class="timeline-item relative">
+                        <span class="text-xs font-bold text-green-700 uppercase tracking-widest">Early 1990s</span>
+                        <h3 class="font-semibold text-lg mt-1 text-slate-900">Legal Division Formed</h3>
+                        <p class="text-slate-600 mt-2 leading-relaxed">The Legal Division was created to handle the growing volume of agrarian disputes, land conversion cases, and legal concerns arising from the implementation of CARL in the Bicol Region.</p>
+                    </div>
+                    <div class="timeline-item relative">
+                        <span class="text-xs font-bold text-green-700 uppercase tracking-widest">2000s</span>
+                        <h3 class="font-semibold text-lg mt-1 text-slate-900">Expansion of Services</h3>
+                        <p class="text-slate-600 mt-2 leading-relaxed">The division expanded its services to include Alternative Dispute Resolution (ADR), providing farmers and landowners a faster, more accessible path to resolving conflicts outside formal courts.</p>
+                    </div>
+                    <div class="timeline-item relative">
+                        <span class="text-xs font-bold text-green-700 uppercase tracking-widest">Present</span>
+                        <h3 class="font-semibold text-lg mt-1 text-slate-900">Continued Service</h3>
+                        <p class="text-slate-600 mt-2 leading-relaxed">Today, the Legal Division continues to serve the agrarian community of Albay Province, adjudicating cases and ensuring that the rights of farmers and rural workers are fully protected under the law.</p>
                     </div>
                 </div>
             </div>
-            <div class="rounded-[2rem] overflow-hidden shadow-2xl border-8 border-white">
-                <img src="Assets/images/scenery.jpg" alt="Countryside" class="w-full h-80 object-cover">
+
+            <div class="space-y-6 lg:pt-16">
+                <div class="bg-green-50 border border-green-100 rounded-2xl p-8">
+                    <span class="text-xs font-bold tracking-widest uppercase text-green-700 block mb-3">Mandate</span>
+                    <p class="text-slate-800 leading-relaxed font-medium">The Legal Division is mandated to provide legal assistance and services in the implementation of agrarian reform laws, adjudicate agrarian law implementation cases, and ensure the protection of the rights of agrarian reform beneficiaries.</p>
+                </div>
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-8">
+                    <span class="text-xs font-bold tracking-widest uppercase text-slate-500 block mb-3">Jurisdiction</span>
+                    <p class="text-slate-700 leading-relaxed">The division has jurisdiction over all agrarian law implementation cases in the Province of Albay, covering land valuation disputes, coverage protests, exemption and exclusion cases, and other related matters.</p>
+                </div>
+                <div class="bg-emerald-950 rounded-2xl p-8">
+                    <span class="text-xs font-bold tracking-widest uppercase text-emerald-400 block mb-3">Core Values</span>
+                    <div class="grid grid-cols-2 gap-3 mt-2">
+                        <div class="flex items-center gap-2">
+                            <div class="w-1.5 h-1.5 rounded-full bg-emerald-400"></div>
+                            <span class="text-emerald-100 text-sm font-medium">Integrity</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-1.5 h-1.5 rounded-full bg-emerald-400"></div>
+                            <span class="text-emerald-100 text-sm font-medium">Excellence</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-1.5 h-1.5 rounded-full bg-emerald-400"></div>
+                            <span class="text-emerald-100 text-sm font-medium">Accountability</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-1.5 h-1.5 rounded-full bg-emerald-400"></div>
+                            <span class="text-emerald-100 text-sm font-medium">Justice</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-1.5 h-1.5 rounded-full bg-emerald-400"></div>
+                            <span class="text-emerald-100 text-sm font-medium">Service</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-1.5 h-1.5 rounded-full bg-emerald-400"></div>
+                            <span class="text-emerald-100 text-sm font-medium">Impartiality</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <footer class="bg-slate-50 border-t border-slate-100 py-12 px-12">
-        <div class="max-w-[90rem] mx-auto text-center md:text-left">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="flex items-center space-x-3 mb-4 md:mb-0">
-                    <img src="Assets/images/logo.png" alt="DAR Logo" class="h-10 w-auto opacity-70 grayscale">
-                    <span class="text-xs font-bold text-slate-900 uppercase">DAR Legal Division</span>
+    <!-- TEAM SECTION -->
+    <section class="bg-slate-50 py-20 px-6 border-t border-slate-100">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <span class="text-xs font-bold tracking-widest uppercase text-green-700">The People</span>
+                <h2 class="text-5xl serif mt-4 text-slate-900">Meet the Team</h2>
+                <p class="text-slate-600 mt-4 text-lg max-w-xl mx-auto">The dedicated legal professionals behind every case, resolution, and agrarian decision.</p>
+            </div>
+
+            <!-- Chief -->
+            <div class="flex justify-center mb-10">
+                <div class="member-card bg-white border border-slate-200 rounded-2xl p-8 flex flex-col items-center text-center shadow-sm w-72 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 right-0 h-1 bg-green-600 rounded-t-2xl"></div>
+                    <div class="member-avatar w-24 h-24 rounded-full bg-slate-200 mb-4 overflow-hidden flex items-center justify-center border-4 border-green-100">
+                        <svg class="w-12 h-12 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                        </svg>
+                    </div>
+                    <span class="text-[10px] font-bold tracking-widest uppercase text-green-700 mb-1">Chief</span>
+                    <h3 class="font-semibold text-lg text-slate-900 leading-tight">Atty. Zaldy Li. Monilla</h3>
+                    <p class="text-slate-500 text-sm mt-1">Attorney V</p>
                 </div>
-                <p class="text-[11px] text-slate-500 font-medium">
-                    &copy; 2026 Department of Agrarian Reform. Official Government Portal.
-                </p>
+            </div>
+
+            <!-- Senior Officer -->
+            <div class="flex justify-center mb-10">
+                <div class="member-card bg-white border border-slate-200 rounded-2xl p-8 flex flex-col items-center text-center shadow-sm w-72 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 right-0 h-1 bg-emerald-700 rounded-t-2xl"></div>
+                    <div class="member-avatar w-24 h-24 rounded-full bg-slate-200 mb-4 overflow-hidden flex items-center justify-center border-4 border-green-100">
+                        <svg class="w-12 h-12 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                        </svg>
+                    </div>
+                    <span class="text-[10px] font-bold tracking-widest uppercase text-emerald-700 mb-1">Senior Officer</span>
+                    <h3 class="font-semibold text-lg text-slate-900 leading-tight">Atty. Bernardo B. Belarmino</h3>
+                    <p class="text-slate-500 text-sm mt-1">Senior Agrarian Reform Program Officer / Provincial Quick Response Officer</p>
+                </div>
+            </div>
+
+            <!-- Staff Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+                <div class="member-card bg-white border border-slate-200 rounded-2xl p-6 flex flex-col items-center text-center shadow-sm relative overflow-hidden">
+                    <div class="absolute top-0 left-0 right-0 h-1 bg-slate-300 rounded-t-2xl"></div>
+                    <div class="member-avatar w-20 h-20 rounded-full bg-slate-200 mb-4 overflow-hidden flex items-center justify-center border-4 border-slate-100">
+                        <svg class="w-10 h-10 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-base text-slate-900 leading-tight">Bien Boy G. Abejuela</h3>
+                    <p class="text-slate-500 text-sm mt-1">Agrarian Reform Program Officer II</p>
+                </div>
+
+                <div class="member-card bg-white border border-slate-200 rounded-2xl p-6 flex flex-col items-center text-center shadow-sm relative overflow-hidden">
+                    <div class="absolute top-0 left-0 right-0 h-1 bg-slate-300 rounded-t-2xl"></div>
+                    <div class="member-avatar w-20 h-20 rounded-full bg-slate-200 mb-4 overflow-hidden flex items-center justify-center border-4 border-slate-100">
+                        <svg class="w-10 h-10 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-base text-slate-900 leading-tight">Blanche V. Letada</h3>
+                    <p class="text-slate-500 text-sm mt-1">Agrarian Reform Program Officer II / PACCU Point Person</p>
+                </div>
+
+                <div class="member-card bg-white border border-slate-200 rounded-2xl p-6 flex flex-col items-center text-center shadow-sm relative overflow-hidden">
+                    <div class="absolute top-0 left-0 right-0 h-1 bg-slate-300 rounded-t-2xl"></div>
+                    <div class="member-avatar w-20 h-20 rounded-full bg-slate-200 mb-4 overflow-hidden flex items-center justify-center border-4 border-slate-100">
+                        <svg class="w-10 h-10 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-base text-slate-900 leading-tight">John Rey M. Erlanda</h3>
+                    <p class="text-slate-500 text-sm mt-1">Agrarian Reform Program Technologist</p>
+                </div>
+
+                <div class="member-card bg-white border border-slate-200 rounded-2xl p-6 flex flex-col items-center text-center shadow-sm relative overflow-hidden">
+                    <div class="absolute top-0 left-0 right-0 h-1 bg-slate-300 rounded-t-2xl"></div>
+                    <div class="member-avatar w-20 h-20 rounded-full bg-slate-200 mb-4 overflow-hidden flex items-center justify-center border-4 border-slate-100">
+                        <svg class="w-10 h-10 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-base text-slate-900 leading-tight">Joan N. Atutubo</h3>
+                    <p class="text-slate-500 text-sm mt-1">Agrarian Reform Program Officer I</p>
+                </div>
+
+                <!-- Ella May centered below -->
+                <div class="member-card bg-white border border-slate-200 rounded-2xl p-6 flex flex-col items-center text-center shadow-sm relative overflow-hidden sm:col-start-2 lg:col-start-2">
+                    <div class="absolute top-0 left-0 right-0 h-1 bg-slate-300 rounded-t-2xl"></div>
+                    <div class="member-avatar w-20 h-20 rounded-full bg-slate-200 mb-4 overflow-hidden flex items-center justify-center border-4 border-slate-100">
+                        <svg class="w-10 h-10 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-base text-slate-900 leading-tight">Ella May A. Lopo</h3>
+                    <p class="text-slate-500 text-sm mt-1">Contract of Service Support Staff</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- OFFICE LOCATION SECTION -->
+    <section class="py-20 px-6 bg-white border-t border-slate-100">
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center mb-14">
+                <span class="text-xs font-bold tracking-widest uppercase text-green-700">Find Us</span>
+                <h2 class="text-5xl serif mt-4 text-slate-900">Office Location</h2>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <!-- Map embed -->
+                <div class="rounded-2xl overflow-hidden border border-slate-200 shadow-lg h-80">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3870.1!2d123.7448!3d13.1391!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33a1ee9b35a1b3b5%3A0x1234567890abcdef!2sDAR%20Provincial%20Office%20Albay!5e0!3m2!1sen!2sph!4v1234567890"
+                        width="100%"
+                        height="100%"
+                        style="border:0;"
+                        allowfullscreen=""
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+
+                <!-- Office Details -->
+                <div class="space-y-6">
+                    <div class="flex items-start gap-5">
+                        <div class="w-12 h-12 rounded-xl bg-green-50 border border-green-100 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold tracking-widest uppercase text-slate-400 block mb-1">Address</span>
+                            <p class="text-slate-900 font-semibold text-lg leading-snug">DAR Legal Division</p>
+                            <p class="text-slate-600">3rd Floor, DAR Provincial Office</p>
+                            <p class="text-slate-600">Legazpi City, Albay</p>
+                            <p class="text-slate-600">Philippines</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-5">
+                        <div class="w-12 h-12 rounded-xl bg-green-50 border border-green-100 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold tracking-widest uppercase text-slate-400 block mb-1">Office Hours</span>
+                            <p class="text-slate-900 font-semibold">Monday – Friday</p>
+                            <p class="text-slate-600">8:00 AM – 5:00 PM</p>
+                            <p class="text-slate-500 text-sm mt-1">Closed on weekends and public holidays</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-5">
+                        <div class="w-12 h-12 rounded-xl bg-green-50 border border-green-100 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold tracking-widest uppercase text-slate-400 block mb-1">Contact</span>
+                            <p class="text-slate-900 font-semibold">DAR Provincial Office — Albay</p>
+                            <p class="text-slate-600 text-sm mt-1">For inquiries, please visit us during office hours or reach out through the DAR official channels.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-green-50 border border-green-100 rounded-xl p-5 mt-4">
+                        <p class="text-green-800 text-sm font-medium leading-relaxed">
+                            📌 The Legal Division is located on the <strong>3rd floor</strong> of the DAR Provincial Office building in Legazpi City. Look for the Legal Division signage upon entry.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-50 border-t border-slate-100 py-6 px-12">
+        <div class="max-w-[90rem] mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
+                <div class="flex items-center space-x-3">
+                    <img src="Assets/images/logo.png" alt="DAR Logo" class="h-8 w-auto opacity-70 grayscale hover:grayscale-0 transition-all">
+                    <div class="flex flex-col">
+                        <span class="text-xs font-bold tracking-tight uppercase text-slate-900">Department of Agrarian Reform</span>
+                        <span class="text-[10px] text-slate-600 uppercase tracking-widest leading-none">Legal Division</span>
+                    </div>
+                </div>
+                <div class="flex space-x-6 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                    <a href="#" class="hover:text-emerald-700 transition-colors">Privacy</a>
+                    <a href="#" class="hover:text-emerald-700 transition-colors">Terms</a>
+                    <a href="aboutus.html" class="hover:text-emerald-700 transition-colors">Contact</a>
+                </div>
+            </div>
+            <div class="border-t border-slate-200/50 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-[11px] text-slate-500 font-medium">&copy; 2026 DAR. All rights reserved.</p>
+                <div class="flex items-center space-x-2">
+                    <div class="w-1.5 h-1.5 rounded-full bg-emerald-500/50"></div>
+                    <span class="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em]">Official Government Portal</span>
+                </div>
             </div>
         </div>
     </footer>
