@@ -11,7 +11,6 @@
         .serif { font-family: 'Instrument Serif', serif; }
         .hero-gradient { background: linear-gradient(to bottom, #f0fdf4, #ffffff); }
 
-        /* CTA Buttons */
         .btn-primary {
             background: #16a34a;
             color: #ffffff;
@@ -44,6 +43,37 @@
             color: white;
             transform: scale(1.05);
         }
+
+        .custom-select {
+            appearance: none;
+            background: white;
+            border: 1px solid #e2e8f0;
+            color: #1e293b;
+            padding: 0.65rem 2.5rem 0.65rem 1rem;
+            border-radius: 0.75rem;
+            font-size: 0.8rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: border-color 0.2s;
+            width: 100%;
+        }
+        .custom-select:hover { border-color: #10b981; }
+        .custom-select:focus { outline: none; border-color: #10b981; box-shadow: 0 0 0 3px rgba(16,185,129,0.1); }
+
+        .select-wrap { position: relative; }
+        .select-wrap::after {
+            content: '';
+            position: absolute;
+            right: 0.85rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-top: 5px solid #94a3b8;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body class="bg-white text-slate-900">
@@ -58,33 +88,30 @@
             </div>
         </div>
 
-       <div class="hidden md:flex items-center space-x-4 text-sm font-medium">
-    <a href="index.html" class="relative group px-4 py-2">
-        <span class="relative z-10 group-hover:text-green-900 transition-colors">Home</span>
-        <div class="absolute inset-0 bg-green-300 scale-y-0 origin-bottom group-hover:scale-y-100 transition-transform duration-300 rounded-sm"></div>
-    </a>
-    
-    <a href="transparency.html" class="relative group px-4 py-2">
-        <span class="relative z-10 group-hover:text-green-900 transition-colors">Transparency</span>
-        <div class="absolute inset-0 bg-green-300 scale-y-0 origin-bottom group-hover:scale-y-100 transition-transform duration-300 rounded-sm"></div>
-    </a>
-
-    <a href="aboutus.html" class="relative group px-4 py-2">
-        <span class="relative z-10 group-hover:text-green-900 transition-colors">About Us</span>
-        <div class="absolute inset-0 bg-green-300 scale-y-0 origin-bottom group-hover:scale-y-100 transition-transform duration-300 rounded-sm"></div>
-    </a>
-    
-    <button onclick="window.location.href='login.html'"
-            class="bg-white/80 border border-slate-200 text-slate-900 px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-white hover:scale-105 transition-all">
-        Admin Login →
-    </button>
-</div>
+        <div class="hidden md:flex items-center space-x-4 text-sm font-medium">
+            <a href="index.html" class="relative group px-4 py-2">
+                <span class="relative z-10 group-hover:text-green-900 transition-colors">Home</span>
+                <div class="absolute inset-0 bg-green-300 scale-y-0 origin-bottom group-hover:scale-y-100 transition-transform duration-300 rounded-sm"></div>
+            </a>
+            <a href="transparency.html" class="relative group px-4 py-2">
+                <span class="relative z-10 group-hover:text-green-900 transition-colors">Transparency</span>
+                <div class="absolute inset-0 bg-green-300 scale-y-0 origin-bottom group-hover:scale-y-100 transition-transform duration-300 rounded-sm"></div>
+            </a>
+            <a href="aboutus.html" class="relative group px-4 py-2">
+                <span class="relative z-10 group-hover:text-green-900 transition-colors">About Us</span>
+                <div class="absolute inset-0 bg-green-300 scale-y-0 origin-bottom group-hover:scale-y-100 transition-transform duration-300 rounded-sm"></div>
+            </a>
+            <button onclick="window.location.href='login.html'"
+                    class="bg-white/80 border border-slate-200 text-slate-900 px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-white hover:scale-105 transition-all">
+                Admin Login →
+            </button>
+        </div>
     </nav>
 
     <!-- HERO -->
     <section class="hero-gradient pt-24 pb-16 px-6 text-center relative overflow-hidden">
         <div class="absolute inset-0 z-0">
-            <img src="Assets/images/scenery.jpg" alt="Background" class="w-full h-half object-cover opacity-30">
+            <img src="Assets/images/scenery.jpg" alt="Background" class="w-full h-full object-cover opacity-30">
             <div class="absolute inset-0 bg-white/10"></div>
         </div>
 
@@ -98,7 +125,6 @@
 
             <!-- VISION & MISSION -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-12 text-left">
-                <!-- Vision -->
                 <div class="bg-white border border-slate-200 rounded-2xl p-8 relative overflow-hidden shadow-sm">
                     <div class="absolute top-0 left-0 right-0 h-1 bg-green-600 rounded-t-2xl"></div>
                     <span class="text-xs font-bold tracking-widest uppercase text-green-700 mb-3 block">Vision</span>
@@ -106,7 +132,6 @@
                         A just and equitable agrarian society where farmers and rural workers enjoy security of tenure, access to land, and the full protection of the law.
                     </p>
                 </div>
-                <!-- Mission -->
                 <div class="bg-white border border-slate-200 rounded-2xl p-8 relative overflow-hidden shadow-sm">
                     <div class="absolute top-0 left-0 right-0 h-1 bg-slate-900 rounded-t-2xl"></div>
                     <span class="text-xs font-bold tracking-widest uppercase text-slate-600 mb-3 block">Mission</span>
@@ -124,36 +149,84 @@
 
             <!-- LEGAL DIVISION OVERVIEW -->
             <div class="max-w-7xl mx-auto bg-white/70 backdrop-blur-xl border border-white/40 rounded-[2.5rem] shadow-2xl overflow-hidden text-left relative z-30">
-                <div class="p-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+
+                <!-- Header + Filters -->
+                <div class="p-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-slate-100/60">
                     <div>
-                        <h2 class="text-3xl font-semibold mb-2 text-slate-900">Legal Division Overview</h2>
-                        <p class="text-slate-600 text-lg">Regional summary report.</p>
+                        <h2 class="text-3xl font-semibold mb-1 text-slate-900">Legal Division Overview</h2>
+                        <p class="text-slate-500 text-base">Regional summary report — Province of Albay</p>
                     </div>
 
-                    <div class="flex flex-col items-end">
-                        <div class="flex items-center space-x-2 mb-2">
-                            <span class="relative flex h-2 w-2">
-                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                            </span>
-                            <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Select Reporting Year</label>
-                        </div>
-                        <div class="relative group">
-                            <select id="year-select" class="appearance-none bg-white border border-slate-200 text-slate-800 py-3 pl-5 pr-12 rounded-xl text-sm font-mono cursor-pointer shadow-sm hover:border-emerald-400 transition-all focus:outline-none focus:ring-4 focus:ring-emerald-500/10">
-                                <option value="2026" selected>2026 (Current)</option>
-                                <option value="2025">2025</option>
-                                <option value="2024">2024</option>
-                                <option value="2023">2023</option>
-                                <option value="2022">2022</option>
-                            </select>
-                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400">
-                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                </svg>
+                    <!-- Filters -->
+                    <div class="flex flex-col sm:flex-row items-end gap-4">
+
+                        <!-- Year -->
+                        <div class="flex flex-col gap-1">
+                            <div class="flex items-center gap-2">
+                                <span class="relative flex h-2 w-2">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                                </span>
+                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Reporting Year</label>
+                            </div>
+                            <div class="select-wrap w-44">
+                                <select id="year-select" class="custom-select">
+                                    <option value="2026" selected>2026 (Current)</option>
+                                    <option value="2025">2025</option>
+                                    <option value="2024">2024</option>
+                                    <option value="2023">2023</option>
+                                    <option value="2022">2022</option>
+                                </select>
                             </div>
                         </div>
+
+                        <!-- District -->
+                        <div class="flex flex-col gap-1">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">District</label>
+                            <div class="select-wrap w-56">
+                                <select id="district-select" class="custom-select" onchange="updateMunicipalities()">
+                                    <option value="">All Districts</option>
+                                    <option value="1">1st District of Albay</option>
+                                    <option value="2">2nd District of Albay</option>
+                                    <option value="3">3rd District of Albay</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Municipality -->
+                        <div class="flex flex-col gap-1">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Municipality</label>
+                            <div class="select-wrap w-48">
+                                <select id="municipality-select" class="custom-select" onchange="updateLocationDisplay()">
+                                    <option value="">All Municipalities</option>
+                                </select>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
+
+                <!-- Location Display Bar -->
+                <div class="px-10 py-4 bg-emerald-50/60 border-b border-slate-100/60 flex items-center gap-3">
+                    <svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    <span id="location-text" class="text-sm font-medium text-emerald-800">
+                        Showing data for <strong>2026</strong>: <strong>All Districts — Province of Albay</strong>
+                    </span>
+                </div>
+
+                <!-- Placeholder content area -->
+                <div class="px-10 py-10 text-center">
+                    <div class="inline-flex flex-col items-center gap-3 text-slate-400">
+                        <svg class="w-10 h-10 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <p class="text-sm italic">Select a district and municipality to view case records and statistics.</p>
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>
@@ -206,18 +279,14 @@
                         <span class="text-[10px] text-slate-600 uppercase tracking-widest leading-none">Legal Division</span>
                     </div>
                 </div>
-
                 <div class="flex space-x-6 text-[10px] font-bold uppercase tracking-widest text-slate-500">
                     <a href="#" class="hover:text-emerald-700 transition-colors">Privacy</a>
                     <a href="#" class="hover:text-emerald-700 transition-colors">Terms</a>
                     <a href="#" class="hover:text-emerald-700 transition-colors">Contact</a>
                 </div>
             </div>
-
             <div class="border-t border-slate-200/50 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
-                <p class="text-[11px] text-slate-500 font-medium">
-                    &copy; 2026 DAR. All rights reserved.
-                </p>
+                <p class="text-[11px] text-slate-500 font-medium">&copy; 2026 DAR. All rights reserved.</p>
                 <div class="flex items-center space-x-2">
                     <div class="w-1.5 h-1.5 rounded-full bg-emerald-500/50"></div>
                     <span class="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em]">Official Government Portal</span>
@@ -225,6 +294,56 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        const municipalities = {
+            "":  [],
+            "1": ["Tiwi", "Malinao", "Malilipot", "Bacacay", "Sto. Domingo"],
+            "2": ["Daraga", "Camalig", "Rapu-Rapu", "Manito"],
+            "3": ["Guinobatan", "Oas", "Jovellar", "Pioduran", "Polangui", "Libon"]
+        };
+
+        const districtNames = {
+            "":  "All Districts — Province of Albay",
+            "1": "1st District of Albay",
+            "2": "2nd District of Albay",
+            "3": "3rd District of Albay"
+        };
+
+        function updateMunicipalities() {
+            const districtVal = document.getElementById('district-select').value;
+            const munSelect   = document.getElementById('municipality-select');
+
+            munSelect.innerHTML = '<option value="">All Municipalities</option>';
+
+            if (districtVal && municipalities[districtVal]) {
+                municipalities[districtVal].forEach(mun => {
+                    const opt = document.createElement('option');
+                    opt.value = mun;
+                    opt.textContent = mun;
+                    munSelect.appendChild(opt);
+                });
+            }
+
+            updateLocationDisplay();
+        }
+
+        function updateLocationDisplay() {
+            const districtVal = document.getElementById('district-select').value;
+            const munVal      = document.getElementById('municipality-select').value;
+            const yearVal     = document.getElementById('year-select').value;
+
+            const location = munVal
+                ? `${munVal}, ${districtNames[districtVal]}`
+                : districtNames[districtVal];
+
+            document.getElementById('location-text').innerHTML =
+                `Showing data for <strong>${yearVal}</strong>: <strong>${location}</strong>`;
+        }
+
+        document.getElementById('year-select').addEventListener('change', updateLocationDisplay);
+        document.getElementById('municipality-select').addEventListener('change', updateLocationDisplay);
+    </script>
 
 </body>
 </html>
