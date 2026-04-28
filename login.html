@@ -3,64 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DAR Admin Login</title>
+    <title>Admin Login | DAR Legal Division</title>
+    <link rel="icon" type="image/png" href="Assets/images/logo.png">
     <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-slate-50 flex items-center justify-center min-h-screen relative">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .serif { font-family: 'Instrument Serif', serif; }
 
-    <div class="absolute top-8 left-8">
-        <a href="index.html" class="flex items-center space-x-2 text-slate-500 hover:text-green-700 transition-colors font-medium group">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        body { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        body.fade-out { animation: fadeOut 0.3s ease-in-out forwards; }
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to   { opacity: 0; transform: translateY(-8px); }
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border-radius: 0.75rem;
+            border: 1px solid #e2e8f0;
+            font-size: 0.875rem;
+            font-family: 'Inter', sans-serif;
+            color: #1e293b;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: white;
+        }
+        .login-input:focus {
+            border-color: #16a34a;
+            box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.1);
+        }
+        .login-input::placeholder { color: #94a3b8; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col items-center justify-center px-4 relative">
+
+    <div class="absolute inset-0 bg-gradient-to-br from-green-50 to-slate-100 -z-10"></div>
+
+    <!-- Back to Portal -->
+    <div class="absolute top-6 left-6">
+        <a href="index.html" id="back-link"
+           class="flex items-center gap-2 text-slate-500 hover:text-green-700 transition-colors font-medium group text-sm">
+            <svg class="h-4 w-4 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
             </svg>
-            <span>Back to Portal</span>
+            Back to Portal
         </a>
     </div>
 
-    <div class="bg-white p-10 rounded-[2rem] shadow-2xl w-full max-w-md border border-slate-100">
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-slate-900">Admin Access</h1>
-            <p class="text-slate-500 mt-2">Enter your DAR credentials</p>
-        </div>
+    <!-- Logo -->
+    <div class="flex flex-col items-center mb-8">
+        <img src="Assets/images/logo.png" alt="DAR Logo" class="h-16 w-auto object-contain mb-4 drop-shadow-sm">
+        <p class="text-xs font-bold tracking-widest uppercase text-slate-400">Department of Agrarian Reform</p>
+        <p class="text-xs font-bold tracking-widest uppercase text-green-700 mt-0.5">Legal Division — Admin Portal</p>
+    </div>
 
-        <form id="loginForm" class="space-y-6">
-            <div>
-                <label class="block text-sm font-bold text-slate-700 mb-2">Email Address</label>
-                <input type="email" id="email" required class="w-full px-5 py-4 rounded-xl border border-slate-200 focus:ring-4 focus:ring-green-500/10 focus:border-green-600 outline-none transition-all" placeholder="admin@dar.gov.ph">
+    <!-- Card -->
+    <div class="bg-white rounded-[2rem] shadow-2xl shadow-slate-200/80 w-full max-w-md border border-slate-100 overflow-hidden">
+        <div class="h-1.5 bg-green-600 w-full"></div>
+        <div class="p-10">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl serif text-slate-900">Admin Access</h1>
+                <p class="text-slate-500 mt-2 text-sm">Enter your DAR credentials to continue</p>
             </div>
-            <div>
-                <label class="block text-sm font-bold text-slate-700 mb-2">Password</label>
-                <input type="password" id="password" required class="w-full px-5 py-4 rounded-xl border border-slate-200 focus:ring-4 focus:ring-green-500/10 focus:border-green-600 outline-none transition-all" placeholder="••••••••">
+
+            <form id="loginForm" class="space-y-5" novalidate>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Email Address</label>
+                    <input type="email" id="email" class="login-input" placeholder="admin@dar.gov.ph">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Password</label>
+                    <div class="relative">
+                        <input type="password" id="password" class="login-input pr-12" placeholder="••••••••">
+                        <button type="button" id="toggle-password"
+                                class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors">
+                            <svg id="eye-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" id="signInBtn"
+                        class="w-full bg-green-600 text-white font-bold py-4 rounded-xl hover:bg-green-700 active:scale-[0.98] transition-all shadow-lg shadow-green-600/20 flex items-center justify-center gap-2 mt-2">
+                    <span id="btn-text">Sign In</span>
+                    <svg id="btn-spinner" class="hidden w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                    </svg>
+                </button>
+            </form>
+
+            <div class="mt-8 pt-6 border-t border-slate-100 text-center">
+                <p class="text-xs text-slate-400">This portal is for authorized DAR personnel only.</p>
+                <p class="text-xs text-slate-400 mt-1">Unauthorized access is prohibited under RA 8792.</p>
             </div>
-            <button type="submit" id="signInBtn" class="w-full bg-green-600 text-white font-bold py-4 rounded-xl hover:bg-green-700 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-green-600/20">
-                Sign In
-            </button>
-        </form>
-        
-        <p id="message" class="mt-6 text-center text-sm text-red-500 hidden"></p>
+        </div>
+    </div>
+
+    <div class="mt-8 flex items-center gap-2">
+        <div class="w-1.5 h-1.5 rounded-full bg-emerald-500/50"></div>
+        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Official Government Portal &copy; 2026 DAR</span>
     </div>
 
     <script>
-        // Simple test logic to see if it's "functional"
+        // Back link with transition
+        document.getElementById('back-link').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.body.classList.add('fade-out');
+            setTimeout(() => { window.location.href = 'index.html'; }, 300);
+        });
+
+        // Show/hide password
+        document.getElementById('toggle-password').addEventListener('click', function() {
+            const input = document.getElementById('password');
+            const icon  = document.getElementById('eye-icon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.innerHTML = `
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>`;
+            } else {
+                input.type = 'password';
+                icon.innerHTML = `
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>`;
+            }
+        });
+
+        // Sign in → redirect to mediation.html
         document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // Stop page from refreshing
-            
-            const btn = document.getElementById('signInBtn');
-            const msg = document.getElementById('message');
-            
-            // Show "Loading" state
-            btn.innerText = "Checking...";
+            e.preventDefault();
+
+            const btnText = document.getElementById('btn-text');
+            const spinner = document.getElementById('btn-spinner');
+            const btn     = document.getElementById('signInBtn');
+
+            // Show loading
+            btnText.textContent = 'Signing in...';
+            spinner.classList.remove('hidden');
             btn.disabled = true;
 
-            // Simulate a delay (like a real server check)
+            // Brief delay then redirect with fade
             setTimeout(() => {
-                msg.classList.remove('hidden');
-                msg.innerText = "Error: Database not connected. Please proceed to Step 3 (Firebase).";
-                btn.innerText = "Sign In";
-                btn.disabled = false;
-            }, 1500);
+                document.body.classList.add('fade-out');
+                setTimeout(() => { window.location.href = 'mediation.html'; }, 300);
+            }, 800);
         });
     </script>
-
 </body>
 </html>
