@@ -4,13 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DAR Legal Division | Case Management</title>
+
+    <!-- Favicon using DAR logo -->
+    <link rel="icon" type="image/png" href="Assets/images/logo.png">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
     <style>
         body { font-family: 'Inter', sans-serif; }
         .serif { font-family: 'Instrument Serif', serif; }
         .hero-gradient { background: linear-gradient(to bottom, #f0fdf4, #ffffff); }
 
+        /* PAGE FADE-IN TRANSITION */
+        body {
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* PAGE FADE-OUT on link click */
+        body.fade-out {
+            animation: fadeOut 0.3s ease-in-out forwards;
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to   { opacity: 0; transform: translateY(-8px); }
+        }
+
+        /* CTA BUTTONS */
         .btn-primary {
             background: #16a34a;
             color: #ffffff;
@@ -23,10 +47,8 @@
             transition: background 0.2s, transform 0.2s;
             box-shadow: 0 4px 15px rgba(22, 163, 74, 0.35);
         }
-        .btn-primary:hover {
-            background: #15803d;
-            transform: scale(1.05);
-        }
+        .btn-primary:hover { background: #15803d; transform: scale(1.05); }
+
         .btn-secondary {
             background: white;
             color: #16a34a;
@@ -38,12 +60,9 @@
             cursor: pointer;
             transition: background 0.2s, color 0.2s, transform 0.2s;
         }
-        .btn-secondary:hover {
-            background: #16a34a;
-            color: white;
-            transform: scale(1.05);
-        }
+        .btn-secondary:hover { background: #16a34a; color: white; transform: scale(1.05); }
 
+        /* CUSTOM SELECT */
         .custom-select {
             appearance: none;
             background: white;
@@ -67,59 +86,131 @@
             right: 0.85rem;
             top: 50%;
             transform: translateY(-50%);
-            width: 0;
-            height: 0;
+            width: 0; height: 0;
             border-left: 4px solid transparent;
             border-right: 4px solid transparent;
             border-top: 5px solid #94a3b8;
             pointer-events: none;
         }
+
+        /* MOBILE MENU */
+        #mobile-menu {
+            display: none;
+            flex-direction: column;
+            background: #15803d;
+            padding: 1rem 1.5rem 1.5rem;
+            gap: 0.5rem;
+            border-radius: 0 0 1.5rem 1.5rem;
+        }
+        #mobile-menu.open { display: flex; }
+        #mobile-menu a, #mobile-menu button {
+            color: white;
+            font-size: 0.95rem;
+            font-weight: 500;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            text-decoration: none;
+            background: none;
+            border-right: none;
+            border-left: none;
+            border-top: none;
+            text-align: left;
+            cursor: pointer;
+            width: 100%;
+        }
+        #mobile-menu a:last-child { border-bottom: none; }
+
+        /* ANNOUNCEMENT CARD HOVER */
+        .announcement-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .announcement-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.07);
+        }
+
+        /* CONTACT FORM INPUT */
+        .contact-input {
+            width: 100%;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            padding: 0.85rem 1rem;
+            font-size: 0.875rem;
+            font-family: 'Inter', sans-serif;
+            color: #1e293b;
+            transition: border-color 0.2s;
+            background: white;
+        }
+        .contact-input:focus {
+            outline: none;
+            border-color: #16a34a;
+            box-shadow: 0 0 0 3px rgba(22,163,74,0.1);
+        }
+        .contact-input::placeholder { color: #94a3b8; }
     </style>
 </head>
 <body class="bg-white text-slate-900">
 
     <!-- NAV -->
-    <nav class="flex justify-between items-center px-12 py-6 bg-green-600 text-white shadow-md relative z-50 rounded-bl-3xl rounded-br-3xl">
-        <div class="flex items-center space-x-4">
-            <img src="Assets/images/logo.png" alt="DAR Logo" class="h-14 w-auto object-contain">
-            <div class="flex flex-col">
-                <span class="text-xl font-bold tracking-tight uppercase leading-tight">Department of Agrarian Reform</span>
-                <span class="font-medium text-green-100 text-sm normal-case tracking-wide">Legal Division</span>
+    <nav class="bg-green-600 text-white shadow-md relative z-50 rounded-bl-3xl rounded-br-3xl">
+        <div class="flex justify-between items-center px-6 md:px-12 py-5">
+            <div class="flex items-center space-x-3">
+                <img src="Assets/images/logo.png" alt="DAR Logo" class="h-12 md:h-14 w-auto object-contain">
+                <div class="flex flex-col">
+                    <span class="text-base md:text-xl font-bold tracking-tight uppercase leading-tight">Department of Agrarian Reform</span>
+                    <span class="font-medium text-green-100 text-xs md:text-sm normal-case tracking-wide">Legal Division</span>
+                </div>
             </div>
+
+            <!-- Desktop Nav -->
+            <div class="hidden md:flex items-center space-x-4 text-sm font-medium">
+                <a href="index.html" class="nav-link relative group px-4 py-2">
+                    <span class="relative z-10 group-hover:text-green-900 transition-colors">Home</span>
+                    <div class="absolute inset-0 bg-green-300 scale-y-0 origin-bottom group-hover:scale-y-100 transition-transform duration-300 rounded-sm"></div>
+                </a>
+                <a href="transparency.html" class="nav-link relative group px-4 py-2">
+                    <span class="relative z-10 group-hover:text-green-900 transition-colors">Transparency</span>
+                    <div class="absolute inset-0 bg-green-300 scale-y-0 origin-bottom group-hover:scale-y-100 transition-transform duration-300 rounded-sm"></div>
+                </a>
+                <a href="aboutus.html" class="nav-link relative group px-4 py-2">
+                    <span class="relative z-10 group-hover:text-green-900 transition-colors">About Us</span>
+                    <div class="absolute inset-0 bg-green-300 scale-y-0 origin-bottom group-hover:scale-y-100 transition-transform duration-300 rounded-sm"></div>
+                </a>
+                <button onclick="navigateTo('login.html')"
+                        class="bg-white/80 border border-slate-200 text-slate-900 px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-white hover:scale-105 transition-all">
+                    Admin Login →
+                </button>
+            </div>
+
+            <!-- Hamburger -->
+            <button id="hamburger" class="md:hidden flex flex-col gap-1.5 p-2" onclick="toggleMenu()">
+                <span class="hamburger-bar block w-6 h-0.5 bg-white transition-all duration-300"></span>
+                <span class="hamburger-bar block w-6 h-0.5 bg-white transition-all duration-300"></span>
+                <span class="hamburger-bar block w-6 h-0.5 bg-white transition-all duration-300"></span>
+            </button>
         </div>
 
-        <div class="hidden md:flex items-center space-x-4 text-sm font-medium">
-            <a href="index.html" class="relative group px-4 py-2">
-                <span class="relative z-10 group-hover:text-green-900 transition-colors">Home</span>
-                <div class="absolute inset-0 bg-green-300 scale-y-0 origin-bottom group-hover:scale-y-100 transition-transform duration-300 rounded-sm"></div>
-            </a>
-            <a href="transparency.html" class="relative group px-4 py-2">
-                <span class="relative z-10 group-hover:text-green-900 transition-colors">Transparency</span>
-                <div class="absolute inset-0 bg-green-300 scale-y-0 origin-bottom group-hover:scale-y-100 transition-transform duration-300 rounded-sm"></div>
-            </a>
-            <a href="aboutus.html" class="relative group px-4 py-2">
-                <span class="relative z-10 group-hover:text-green-900 transition-colors">About Us</span>
-                <div class="absolute inset-0 bg-green-300 scale-y-0 origin-bottom group-hover:scale-y-100 transition-transform duration-300 rounded-sm"></div>
-            </a>
-            <button onclick="window.location.href='login.html'"
-                    class="bg-white/80 border border-slate-200 text-slate-900 px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-white hover:scale-105 transition-all">
-                Admin Login →
-            </button>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="transparency.html" class="nav-link">Transparency</a>
+            <a href="aboutus.html" class="nav-link">About Us</a>
+            <button onclick="navigateTo('login.html')" style="border-bottom:none; color:white; padding: 0.6rem 0; font-size:0.95rem; font-weight:500; background:none; border:none; text-align:left; cursor:pointer;">Admin Login →</button>
         </div>
     </nav>
 
     <!-- HERO -->
-    <section class="hero-gradient pt-24 pb-16 px-6 text-center relative overflow-hidden">
+    <section class="hero-gradient pt-16 md:pt-24 pb-16 px-6 text-center relative overflow-hidden">
         <div class="absolute inset-0 z-0">
-            <img src="Assets/images/scenery.jpg" alt="Background" class="w-half h-full object-cover opacity-30">
+            <img src="Assets/images/scenery.jpg" alt="Background" class="w-full h-full object-cover opacity-30">
             <div class="absolute inset-0 bg-white/10"></div>
         </div>
 
         <div class="relative z-20 max-w-5xl mx-auto">
-            <h1 class="text-6xl md:text-8xl serif leading-tight mb-8 text-slate-900">
+            <h1 class="text-5xl md:text-8xl serif leading-tight mb-8 text-slate-900">
                 Legal Division for Agrarian Justice
             </h1>
-            <p class="text-xl text-slate-700 max-w-3xl mx-auto mb-12 font-medium">
+            <p class="text-lg md:text-xl text-slate-700 max-w-3xl mx-auto mb-12 font-medium">
                 Ensuring that land distribution and farmer protection are carried out with absolute adherence to the rule of law.
             </p>
 
@@ -142,25 +233,19 @@
             </div>
 
             <!-- CTA BUTTONS -->
-            <div class="flex justify-center space-x-6 mb-16">
+            <div class="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 mb-16">
                 <button class="btn-primary">Search Case Records</button>
                 <button class="btn-secondary">File a Case</button>
             </div>
 
             <!-- LEGAL DIVISION OVERVIEW -->
             <div class="max-w-7xl mx-auto bg-white/70 backdrop-blur-xl border border-white/40 rounded-[2.5rem] shadow-2xl overflow-hidden text-left relative z-30">
-
-                <!-- Header + Filters -->
-                <div class="p-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-slate-100/60">
+                <div class="p-8 md:p-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-slate-100/60">
                     <div>
-                        <h2 class="text-3xl font-semibold mb-1 text-slate-900">Legal Division Overview</h2>
+                        <h2 class="text-2xl md:text-3xl font-semibold mb-1 text-slate-900">Legal Division Overview</h2>
                         <p class="text-slate-500 text-base">Regional summary report — Province of Albay</p>
                     </div>
-
-                    <!-- Filters -->
-                    <div class="flex flex-col sm:flex-row items-end gap-4">
-
-                        <!-- Year -->
+                    <div class="flex flex-col sm:flex-row items-start sm:items-end gap-4 w-full md:w-auto">
                         <div class="flex flex-col gap-1">
                             <div class="flex items-center gap-2">
                                 <span class="relative flex h-2 w-2">
@@ -179,8 +264,6 @@
                                 </select>
                             </div>
                         </div>
-
-                        <!-- District -->
                         <div class="flex flex-col gap-1">
                             <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">District</label>
                             <div class="select-wrap w-56">
@@ -192,8 +275,6 @@
                                 </select>
                             </div>
                         </div>
-
-                        <!-- Municipality -->
                         <div class="flex flex-col gap-1">
                             <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Municipality</label>
                             <div class="select-wrap w-48">
@@ -202,12 +283,9 @@
                                 </select>
                             </div>
                         </div>
-
                     </div>
                 </div>
-
-                <!-- Location Display Bar -->
-                <div class="px-10 py-4 bg-emerald-50/60 border-b border-slate-100/60 flex items-center gap-3">
+                <div class="px-8 md:px-10 py-4 bg-emerald-50/60 border-b border-slate-100/60 flex items-center gap-3">
                     <svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -216,9 +294,7 @@
                         Showing data for <strong>2026</strong>: <strong>All Districts — Province of Albay</strong>
                     </span>
                 </div>
-
-                <!-- Placeholder content area -->
-                <div class="px-10 py-10 text-center">
+                <div class="px-10 py-8 text-center">
                     <div class="inline-flex flex-col items-center gap-3 text-slate-400">
                         <svg class="w-10 h-10 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
@@ -226,50 +302,195 @@
                         <p class="text-sm italic">Select a district and municipality to view case records and statistics.</p>
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
 
-    <!-- CONTENT SECTION -->
-    <section class="max-w-[90rem] mx-auto py-40 px-12 grid grid-cols-1 lg:grid-cols-2 gap-32 items-center">
+    <!-- ANNOUNCEMENTS SECTION -->
+    <section class="max-w-6xl mx-auto py-24 px-6 md:px-12">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-4">
+            <div>
+                <span class="text-xs font-bold tracking-widest uppercase text-green-700">Stay Informed</span>
+                <h2 class="text-4xl md:text-5xl serif mt-3 text-slate-900">Latest Updates & Announcements</h2>
+            </div>
+            <a href="#" class="text-xs font-bold uppercase tracking-widest text-green-700 hover:text-green-900 transition-colors whitespace-nowrap">View All →</a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+            <!-- Announcement 1 -->
+            <div class="announcement-card bg-white border border-slate-200 rounded-2xl overflow-hidden">
+                <div class="h-2 bg-green-600"></div>
+                <div class="p-7">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-[10px] font-bold uppercase tracking-widest bg-green-100 text-green-700 px-3 py-1 rounded-full">Order</span>
+                        <span class="text-xs text-slate-400">April 15, 2026</span>
+                    </div>
+                    <h3 class="font-bold text-lg text-slate-900 mb-2 leading-snug">DAR Administrative Order No. 03, Series of 2026</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed">Updated guidelines on the processing of Agrarian Law Implementation (ALI) cases for 2026.</p>
+                    <a href="#" class="mt-5 inline-flex items-center gap-1.5 text-green-700 font-bold text-xs uppercase tracking-widest hover:text-green-900 transition-colors">
+                        Read More →
+                    </a>
+                </div>
+            </div>
+
+            <!-- Announcement 2 -->
+            <div class="announcement-card bg-white border border-slate-200 rounded-2xl overflow-hidden">
+                <div class="h-2 bg-blue-500"></div>
+                <div class="p-7">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-[10px] font-bold uppercase tracking-widest bg-blue-100 text-blue-700 px-3 py-1 rounded-full">Notice</span>
+                        <span class="text-xs text-slate-400">April 10, 2026</span>
+                    </div>
+                    <h3 class="font-bold text-lg text-slate-900 mb-2 leading-snug">Schedule of Mediation Hearings — Q2 2026</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed">The Legal Division releases the schedule of ADR mediation hearings for April to June 2026.</p>
+                    <a href="#" class="mt-5 inline-flex items-center gap-1.5 text-blue-700 font-bold text-xs uppercase tracking-widest hover:text-blue-900 transition-colors">
+                        Read More →
+                    </a>
+                </div>
+            </div>
+
+            <!-- Announcement 3 -->
+            <div class="announcement-card bg-white border border-slate-200 rounded-2xl overflow-hidden">
+                <div class="h-2 bg-amber-500"></div>
+                <div class="p-7">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-[10px] font-bold uppercase tracking-widest bg-amber-100 text-amber-700 px-3 py-1 rounded-full">Urgent</span>
+                        <span class="text-xs text-slate-400">April 5, 2026</span>
+                    </div>
+                    <h3 class="font-bold text-lg text-slate-900 mb-2 leading-snug">Notice to Parties: Region IV-A Appeals Deadline</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed">All parties with pending appeals are reminded of the filing deadline on April 30, 2026.</p>
+                    <a href="#" class="mt-5 inline-flex items-center gap-1.5 text-amber-700 font-bold text-xs uppercase tracking-widest hover:text-amber-900 transition-colors">
+                        Read More →
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- CONTENT / SERVICES SECTION -->
+    <section class="max-w-[90rem] mx-auto py-20 px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-20 md:gap-32 items-center">
         <div class="relative group">
             <div class="absolute -inset-6 bg-green-50 rounded-[2rem] -z-10 group-hover:bg-green-100/50 transition-all"></div>
             <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=80&w=1200"
                  alt="Legal background"
-                 class="rounded-2xl shadow-2xl grayscale hover:grayscale-0 transition duration-700 w-full object-cover h-[500px]">
-            <div class="absolute bottom-10 left-10 bg-white/95 backdrop-blur-md p-8 rounded-xl border border-white shadow-2xl max-w-sm">
+                 class="rounded-2xl shadow-2xl grayscale hover:grayscale-0 transition duration-700 w-full object-cover h-[400px] md:h-[500px]">
+            <div class="absolute bottom-6 left-6 md:bottom-10 md:left-10 bg-white/95 backdrop-blur-md p-6 md:p-8 rounded-xl border border-white shadow-2xl max-w-xs md:max-w-sm">
                 <span class="text-xs font-bold uppercase tracking-[0.2em] text-emerald-700">Jurisprudence</span>
-                <p class="text-lg font-medium mt-4 leading-relaxed text-slate-900">Latest Supreme Court rulings on agrarian land conversion are now integrated.</p>
+                <p class="text-base md:text-lg font-medium mt-3 leading-relaxed text-slate-900">Latest Supreme Court rulings on agrarian land conversion are now integrated.</p>
             </div>
         </div>
 
-        <div class="pr-12">
-            <h2 class="text-5xl md:text-6xl serif mb-16 leading-tight text-slate-900">Securing rights through excellence</h2>
-            <div class="space-y-12">
-                <div class="flex justify-between items-start border-b border-slate-100 pb-10 group">
+        <div class="md:pr-12">
+            <h2 class="text-4xl md:text-6xl serif mb-12 md:mb-16 leading-tight text-slate-900">Securing rights through excellence</h2>
+            <div class="space-y-10 md:space-y-12">
+                <div class="flex justify-between items-start border-b border-slate-100 pb-8 md:pb-10 group">
                     <div class="max-w-md">
-                        <h3 class="font-bold text-2xl mb-2 text-slate-900">Case Adjudication</h3>
-                        <p class="text-slate-600 text-lg">Timely resolution of ALI cases through rigorous legal review.</p>
+                        <h3 class="font-bold text-xl md:text-2xl mb-2 text-slate-900">Case Adjudication</h3>
+                        <p class="text-slate-600 text-base md:text-lg">Timely resolution of ALI cases through rigorous legal review.</p>
                     </div>
-                    <span class="text-sm font-mono text-slate-400 group-hover:text-emerald-950 font-bold transition-colors">SECTION 01</span>
+                    <span class="text-sm font-mono text-slate-400 group-hover:text-emerald-950 font-bold transition-colors ml-4">SECTION 01</span>
                 </div>
-                <div class="flex justify-between items-start border-b border-slate-100 pb-10 group">
+                <div class="flex justify-between items-start border-b border-slate-100 pb-8 md:pb-10 group">
                     <div class="max-w-md">
-                        <h3 class="font-bold text-2xl mb-2 text-slate-900">Alternative Dispute Resolution</h3>
-                        <p class="text-slate-600 text-lg">Promoting mediation to settle conflicts fairly outside formal courts.</p>
+                        <h3 class="font-bold text-xl md:text-2xl mb-2 text-slate-900">Alternative Dispute Resolution</h3>
+                        <p class="text-slate-600 text-base md:text-lg">Promoting mediation to settle conflicts fairly outside formal courts.</p>
                     </div>
-                    <span class="text-sm font-mono text-slate-400 group-hover:text-emerald-950 font-bold transition-colors">SECTION 02</span>
+                    <span class="text-sm font-mono text-slate-400 group-hover:text-emerald-950 font-bold transition-colors ml-4">SECTION 02</span>
                 </div>
             </div>
-            <button class="mt-16 bg-emerald-950 text-white px-12 py-5 rounded-sm text-sm font-bold tracking-widest uppercase hover:bg-emerald-900 transition-all">
+            <button class="mt-12 md:mt-16 bg-emerald-950 text-white px-10 md:px-12 py-5 rounded-sm text-sm font-bold tracking-widest uppercase hover:bg-emerald-900 transition-all">
                 Access Legal Database
             </button>
         </div>
     </section>
 
+    <!-- CONTACT SECTION -->
+    <section class="bg-slate-50 border-t border-slate-100 py-24 px-6 md:px-12">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+
+            <!-- Left: Info -->
+            <div>
+                <span class="text-xs font-bold tracking-widest uppercase text-green-700">Get in Touch</span>
+                <h2 class="text-4xl md:text-5xl serif mt-4 mb-8 text-slate-900">Contact the Legal Division</h2>
+                <p class="text-slate-600 text-base leading-relaxed mb-10">Have a legal concern or inquiry? Reach out to the DAR Legal Division and our team will get back to you as soon as possible.</p>
+
+                <div class="space-y-6">
+                    <div class="flex items-start gap-4">
+                        <div class="w-11 h-11 rounded-xl bg-green-50 border border-green-100 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-slate-900">Address</p>
+                            <p class="text-slate-500 text-sm mt-0.5">3rd Floor, DAR Provincial Office<br>Legazpi City, Albay, Philippines</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-11 h-11 rounded-xl bg-green-50 border border-green-100 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-slate-900">Office Hours</p>
+                            <p class="text-slate-500 text-sm mt-0.5">Monday – Friday, 8:00 AM – 5:00 PM<br>Closed on weekends & public holidays</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-11 h-11 rounded-xl bg-green-50 border border-green-100 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-slate-900">Email</p>
+                            <p class="text-slate-500 text-sm mt-0.5">dar.legaldivision.albay@dar.gov.ph</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Form -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-8 shadow-sm">
+                <h3 class="font-bold text-xl text-slate-900 mb-6">Send us a Message</h3>
+                <div class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-xs font-bold uppercase tracking-widest text-slate-400 block mb-1.5">Full Name</label>
+                            <input type="text" placeholder="Juan dela Cruz" class="contact-input">
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold uppercase tracking-widest text-slate-400 block mb-1.5">Contact Number</label>
+                            <input type="text" placeholder="+63 9XX XXX XXXX" class="contact-input">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold uppercase tracking-widest text-slate-400 block mb-1.5">Email Address</label>
+                        <input type="email" placeholder="you@example.com" class="contact-input">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold uppercase tracking-widest text-slate-400 block mb-1.5">Subject</label>
+                        <input type="text" placeholder="e.g. Case Inquiry, ADR Request" class="contact-input">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold uppercase tracking-widest text-slate-400 block mb-1.5">Message</label>
+                        <textarea rows="4" placeholder="Describe your concern or inquiry..." class="contact-input resize-none"></textarea>
+                    </div>
+                    <button class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3.5 rounded-xl text-sm tracking-wide transition-colors mt-2">
+                        Send Message
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
     <!-- FOOTER -->
-    <footer class="bg-slate-50 border-t border-slate-100 py-6 px-12">
+    <footer class="bg-slate-50 border-t border-slate-100 py-6 px-6 md:px-12">
         <div class="max-w-[90rem] mx-auto">
             <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
                 <div class="flex items-center space-x-3">
@@ -282,7 +503,7 @@
                 <div class="flex space-x-6 text-[10px] font-bold uppercase tracking-widest text-slate-500">
                     <a href="#" class="hover:text-emerald-700 transition-colors">Privacy</a>
                     <a href="#" class="hover:text-emerald-700 transition-colors">Terms</a>
-                    <a href="#" class="hover:text-emerald-700 transition-colors">Contact</a>
+                    <a href="aboutus.html" class="hover:text-emerald-700 transition-colors">Contact</a>
                 </div>
             </div>
             <div class="border-t border-slate-200/50 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
@@ -296,6 +517,30 @@
     </footer>
 
     <script>
+        // ─── MOBILE MENU ───────────────────────────────────────────
+        function toggleMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('open');
+        }
+
+        // ─── PAGE TRANSITIONS ──────────────────────────────────────
+        function navigateTo(url) {
+            document.body.classList.add('fade-out');
+            setTimeout(() => { window.location.href = url; }, 300);
+        }
+
+        // Attach fade-out to all internal nav links
+        document.querySelectorAll('a.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href && !href.startsWith('http') && !href.startsWith('#')) {
+                    e.preventDefault();
+                    navigateTo(href);
+                }
+            });
+        });
+
+        // ─── DISTRICT / MUNICIPALITY DROPDOWNS ────────────────────
         const municipalities = {
             "":  [],
             "1": ["Tiwi", "Malinao", "Malilipot", "Bacacay", "Sto. Domingo"],
@@ -313,9 +558,7 @@
         function updateMunicipalities() {
             const districtVal = document.getElementById('district-select').value;
             const munSelect   = document.getElementById('municipality-select');
-
             munSelect.innerHTML = '<option value="">All Municipalities</option>';
-
             if (districtVal && municipalities[districtVal]) {
                 municipalities[districtVal].forEach(mun => {
                     const opt = document.createElement('option');
@@ -324,7 +567,6 @@
                     munSelect.appendChild(opt);
                 });
             }
-
             updateLocationDisplay();
         }
 
@@ -332,11 +574,7 @@
             const districtVal = document.getElementById('district-select').value;
             const munVal      = document.getElementById('municipality-select').value;
             const yearVal     = document.getElementById('year-select').value;
-
-            const location = munVal
-                ? `${munVal}, ${districtNames[districtVal]}`
-                : districtNames[districtVal];
-
+            const location    = munVal ? `${munVal}, ${districtNames[districtVal]}` : districtNames[districtVal];
             document.getElementById('location-text').innerHTML =
                 `Showing data for <strong>${yearVal}</strong>: <strong>${location}</strong>`;
         }
