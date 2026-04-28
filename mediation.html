@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mediation Reports | DAR Admin</title>
+    <link rel="icon" type="image/png" href="Assets/images/logo.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .serif { font-family: 'Instrument Serif', serif; }
+
+        body { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        body.fade-out { animation: fadeOut 0.3s ease-in-out forwards; }
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to   { opacity: 0; transform: translateY(-8px); }
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            font-family: 'Inter', sans-serif;
+            color: #1e293b;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: white;
+        }
+        .form-input:focus {
+            border-color: #16a34a;
+            box-shadow: 0 0 0 3px rgba(22,163,74,0.1);
+        }
+        .form-input::placeholder { color: #94a3b8; }
+
+        .form-label {
+            display: block;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #64748b;
+            margin-bottom: 6px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .status-pending    { background: #fef9c3; color: #854d0e; }
+        .status-ongoing    { background: #dbeafe; color: #1e40af; }
+        .status-resolved   { background: #dcfce7; color: #166534; }
+        .status-failed     { background: #fee2e2; color: #991b1b; }
+
+        .toast {
+            position: fixed; bottom: 2rem; right: 2rem;
+            background: #166534; color: white;
+            padding: 1rem 1.5rem; border-radius: 1rem;
+            font-size: 0.875rem; font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transform: translateY(100px); opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 999;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .toast.show { transform: translateY(0); opacity: 1; }
+
+        tr:hover td { background: #f0fdf4; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+    <!-- NAV -->
+    <nav class="bg-green-600 text-white shadow-md px-6 md:px-12 py-5 flex justify-between items-center rounded-bl-3xl rounded-br-3xl">
+        <div class="flex items-center gap-3">
+            <img src="Assets/images/logo.png" alt="DAR Logo" class="h-10 w-auto object-contain">
+            <div>
+                <p class="text-sm font-bold uppercase tracking-tight leading-tight">DAR Legal Division</p>
+                <p class="text-xs text-green-200 tracking-wide">Admin Dashboard</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-4">
+            <a href="index.html" id="portal-link"
+               class="text-xs font-bold uppercase tracking-widest text-green-200 hover:text-white transition-colors flex items-center gap-1.5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                Back to Portal
+            </a>
+            <div class="w-px h-5 bg-green-400/50"></div>
+            <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center">
+                    <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                    </svg>
+                </div>
+                <span class="text-xs font-semibold text-green-100">Admin</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-6 md:px-12 py-12">
+
+        <!-- Page Header -->
+        <div class="mb-10">
+            <span class="text-xs font-bold tracking-widest uppercase text-green-700">Admin Panel</span>
+            <h1 class="text-4xl serif mt-2 text-slate-900">Mediation Reports</h1>
+            <p class="text-slate-500 mt-2 text-sm">Enter and manage mediation case reports. Reports will appear in the Legal Division Overview on the public portal.</p>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+
+            <!-- FORM -->
+            <div class="xl:col-span-1">
+                <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm sticky top-6">
+                    <div class="h-1 bg-green-600"></div>
+                    <div class="p-7">
+                        <h2 class="font-bold text-lg text-slate-900 mb-6">Add New Report</h2>
+
+                        <form id="reportForm" class="space-y-4">
+
+                            <div>
+                                <label class="form-label">Case No.</label>
+                                <input type="text" id="caseNo" class="form-input" placeholder="e.g. ALI-2026-001" required>
+                            </div>
+
+                            <div>
+                                <label class="form-label">Complainant (Party A)</label>
+                                <input type="text" id="partyA" class="form-input" placeholder="Full name" required>
+                            </div>
+
+                            <div>
+                                <label class="form-label">Respondent (Party B)</label>
+                                <input type="text" id="partyB" class="form-input" placeholder="Full name" required>
+                            </div>
+
+                            <div>
+                                <label class="form-label">Mediation Officer</label>
+                                <input type="text" id="officer" class="form-input" placeholder="e.g. Atty. Monilla" required>
+                            </div>
+
+                            <div>
+                                <label class="form-label">Date of Mediation</label>
+                                <input type="date" id="mediationDate" class="form-input" required>
+                            </div>
+
+                            <div>
+                                <label class="form-label">Municipality</label>
+                                <select id="municipality" class="form-input" required>
+                                    <option value="">Select Municipality</option>
+                                    <optgroup label="1st District">
+                                        <option>Tiwi</option>
+                                        <option>Malinao</option>
+                                        <option>Malilipot</option>
+                                        <option>Bacacay</option>
+                                        <option>Sto. Domingo</option>
+                                    </optgroup>
+                                    <optgroup label="2nd District">
+                                        <option>Daraga</option>
+                                        <option>Camalig</option>
+                                        <option>Rapu-Rapu</option>
+                                        <option>Manito</option>
+                                    </optgroup>
+                                    <optgroup label="3rd District">
+                                        <option>Guinobatan</option>
+                                        <option>Oas</option>
+                                        <option>Jovellar</option>
+                                        <option>Pioduran</option>
+                                        <option>Polangui</option>
+                                        <option>Libon</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="form-label">Status</label>
+                                <select id="status" class="form-input" required>
+                                    <option value="">Select Status</option>
+                                    <option value="Pending">Pending</option>
+                                    <option value="Ongoing">Ongoing</option>
+                                    <option value="Resolved">Resolved</option>
+                                    <option value="Failed">Failed</option>
+                                </select>
+                            </div>
+
+                            <button type="submit"
+                                    class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3.5 rounded-xl transition-all text-sm tracking-wide mt-2 flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                </svg>
+                                Add Report
+                            </button>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- REPORTS TABLE -->
+            <div class="xl:col-span-2 space-y-6">
+
+                <!-- Summary Cards -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 text-center shadow-sm">
+                        <div id="count-total" class="text-3xl font-light text-slate-900">0</div>
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mt-1">Total</p>
+                    </div>
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 text-center shadow-sm">
+                        <div id="count-pending" class="text-3xl font-light text-yellow-600">0</div>
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mt-1">Pending</p>
+                    </div>
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 text-center shadow-sm">
+                        <div id="count-resolved" class="text-3xl font-light text-green-600">0</div>
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mt-1">Resolved</p>
+                    </div>
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 text-center shadow-sm">
+                        <div id="count-ongoing" class="text-3xl font-light text-blue-600">0</div>
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mt-1">Ongoing</p>
+                    </div>
+                </div>
+
+                <!-- Filter Bar -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 flex flex-col sm:flex-row gap-3 shadow-sm">
+                    <input type="text" id="search" class="form-input flex-1" placeholder="🔍  Search by case no., party, or municipality...">
+                    <select id="filter-status" class="form-input sm:w-44">
+                        <option value="">All Statuses</option>
+                        <option>Pending</option>
+                        <option>Ongoing</option>
+                        <option>Resolved</option>
+                        <option>Failed</option>
+                    </select>
+                    <select id="filter-municipality" class="form-input sm:w-48">
+                        <option value="">All Municipalities</option>
+                        <optgroup label="1st District">
+                            <option>Tiwi</option><option>Malinao</option><option>Malilipot</option><option>Bacacay</option><option>Sto. Domingo</option>
+                        </optgroup>
+                        <optgroup label="2nd District">
+                            <option>Daraga</option><option>Camalig</option><option>Rapu-Rapu</option><option>Manito</option>
+                        </optgroup>
+                        <optgroup label="3rd District">
+                            <option>Guinobatan</option><option>Oas</option><option>Jovellar</option><option>Pioduran</option><option>Polangui</option><option>Libon</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <!-- Table -->
+                <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="border-b border-slate-100 bg-slate-50">
+                                    <th class="text-left px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">Case No.</th>
+                                    <th class="text-left px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">Parties</th>
+                                    <th class="text-left px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">Officer</th>
+                                    <th class="text-left px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">Date</th>
+                                    <th class="text-left px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">Municipality</th>
+                                    <th class="text-left px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">Status</th>
+                                    <th class="text-left px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="reportTableBody">
+                                <tr id="empty-row">
+                                    <td colspan="7" class="text-center py-16 text-slate-400 text-sm italic">
+                                        No reports yet. Add your first mediation report.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+        </svg>
+        <span id="toast-msg">Report saved!</span>
+    </div>
+
+    <script>
+        // ─── PAGE TRANSITION ───────────────────────────────────────
+        function navigateTo(url) {
+            document.body.classList.add('fade-out');
+            setTimeout(() => { window.location.href = url; }, 300);
+        }
+        document.getElementById('portal-link').addEventListener('click', function(e) {
+            e.preventDefault();
+            navigateTo('index.html');
+        });
+
+        // ─── STORAGE KEY ───────────────────────────────────────────
+        const STORAGE_KEY = 'dar_mediation_reports';
+
+        // ─── LOAD REPORTS ──────────────────────────────────────────
+        function getReports() {
+            return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        }
+
+        function saveReports(reports) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(reports));
+        }
+
+        // ─── STATUS BADGE ──────────────────────────────────────────
+        function statusBadge(status) {
+            const map = {
+                'Pending':  'status-pending',
+                'Ongoing':  'status-ongoing',
+                'Resolved': 'status-resolved',
+                'Failed':   'status-failed',
+            };
+            return `<span class="status-badge ${map[status] || ''}">${status}</span>`;
+        }
+
+        // ─── RENDER TABLE ──────────────────────────────────────────
+        function renderTable(filter = '', filterStatus = '', filterMun = '') {
+            const reports = getReports();
+            const tbody   = document.getElementById('reportTableBody');
+            const emptyRow = document.getElementById('empty-row');
+
+            const filtered = reports.filter(r => {
+                const matchSearch = !filter ||
+                    r.caseNo.toLowerCase().includes(filter) ||
+                    r.partyA.toLowerCase().includes(filter) ||
+                    r.partyB.toLowerCase().includes(filter) ||
+                    r.municipality.toLowerCase().includes(filter) ||
+                    r.officer.toLowerCase().includes(filter);
+                const matchStatus = !filterStatus || r.status === filterStatus;
+                const matchMun    = !filterMun    || r.municipality === filterMun;
+                return matchSearch && matchStatus && matchMun;
+            });
+
+            // Clear existing rows (keep empty-row)
+            Array.from(tbody.querySelectorAll('tr:not(#empty-row)')).forEach(r => r.remove());
+
+            if (filtered.length === 0) {
+                emptyRow.style.display = '';
+            } else {
+                emptyRow.style.display = 'none';
+                filtered.slice().reverse().forEach(r => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'border-b border-slate-50 transition-colors';
+                    tr.innerHTML = `
+                        <td class="px-5 py-4 font-mono text-xs font-bold text-slate-700">${r.caseNo}</td>
+                        <td class="px-5 py-4">
+                            <p class="font-medium text-slate-900 text-xs">${r.partyA}</p>
+                            <p class="text-slate-400 text-xs">vs. ${r.partyB}</p>
+                        </td>
+                        <td class="px-5 py-4 text-xs text-slate-600">${r.officer}</td>
+                        <td class="px-5 py-4 text-xs text-slate-500 whitespace-nowrap">${r.date}</td>
+                        <td class="px-5 py-4 text-xs text-slate-600">${r.municipality}</td>
+                        <td class="px-5 py-4">${statusBadge(r.status)}</td>
+                        <td class="px-5 py-4">
+                            <button onclick="deleteReport('${r.id}')"
+                                    class="text-slate-300 hover:text-red-500 transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                </svg>
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            updateCounts();
+        }
+
+        // ─── UPDATE SUMMARY COUNTS ─────────────────────────────────
+        function updateCounts() {
+            const reports = getReports();
+            document.getElementById('count-total').textContent   = reports.length;
+            document.getElementById('count-pending').textContent = reports.filter(r => r.status === 'Pending').length;
+            document.getElementById('count-resolved').textContent= reports.filter(r => r.status === 'Resolved').length;
+            document.getElementById('count-ongoing').textContent = reports.filter(r => r.status === 'Ongoing').length;
+        }
+
+        // ─── ADD REPORT ────────────────────────────────────────────
+        document.getElementById('reportForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const report = {
+                id:           Date.now().toString(),
+                caseNo:       document.getElementById('caseNo').value.trim(),
+                partyA:       document.getElementById('partyA').value.trim(),
+                partyB:       document.getElementById('partyB').value.trim(),
+                officer:      document.getElementById('officer').value.trim(),
+                date:         document.getElementById('mediationDate').value,
+                municipality: document.getElementById('municipality').value,
+                status:       document.getElementById('status').value,
+                createdAt:    new Date().toISOString(),
+            };
+
+            const reports = getReports();
+            reports.push(report);
+            saveReports(reports);
+
+            // Reset form
+            this.reset();
+
+            // Render
+            renderTable(
+                document.getElementById('search').value.toLowerCase(),
+                document.getElementById('filter-status').value,
+                document.getElementById('filter-municipality').value
+            );
+
+            showToast('Report saved successfully!');
+        });
+
+        // ─── DELETE REPORT ─────────────────────────────────────────
+        function deleteReport(id) {
+            if (!confirm('Delete this report?')) return;
+            const reports = getReports().filter(r => r.id !== id);
+            saveReports(reports);
+            renderTable(
+                document.getElementById('search').value.toLowerCase(),
+                document.getElementById('filter-status').value,
+                document.getElementById('filter-municipality').value
+            );
+            showToast('Report deleted.');
+        }
+
+        // ─── FILTERS ───────────────────────────────────────────────
+        document.getElementById('search').addEventListener('input', applyFilters);
+        document.getElementById('filter-status').addEventListener('change', applyFilters);
+        document.getElementById('filter-municipality').addEventListener('change', applyFilters);
+
+        function applyFilters() {
+            renderTable(
+                document.getElementById('search').value.toLowerCase(),
+                document.getElementById('filter-status').value,
+                document.getElementById('filter-municipality').value
+            );
+        }
+
+        // ─── TOAST ─────────────────────────────────────────────────
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // ─── INIT ──────────────────────────────────────────────────
+        renderTable();
+    </script>
+</body>
+</html>
