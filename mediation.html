@@ -39,6 +39,11 @@
             box-shadow: 0 0 0 3px rgba(22,163,74,0.1);
         }
         .form-input::placeholder { color: #94a3b8; }
+        .form-input:disabled {
+            background: #f8fafc;
+            color: #64748b;
+            cursor: not-allowed;
+        }
 
         .form-label {
             display: block;
@@ -63,6 +68,7 @@
         .status-resolved   { background: #dcfce7; color: #166534; }
         .status-failed     { background: #fee2e2; color: #991b1b; }
 
+        /* TOAST */
         .toast {
             position: fixed; bottom: 2rem; right: 2rem;
             background: #166534; color: white;
@@ -71,12 +77,88 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             transform: translateY(100px); opacity: 0;
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            z-index: 999;
+            z-index: 9999;
             display: flex; align-items: center; gap: 0.5rem;
         }
         .toast.show { transform: translateY(0); opacity: 1; }
 
-        tr:hover td { background: #f0fdf4; }
+        /* TABLE ROW HOVER */
+        .report-row { cursor: pointer; transition: background 0.15s; }
+        .report-row:hover td { background: #f0fdf4; }
+
+        /* MODAL */
+        #case-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        #case-modal.open { display: flex; }
+
+        .modal-box {
+            background: white;
+            border-radius: 1.5rem;
+            width: 100%;
+            max-width: 620px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.2);
+            animation: modalIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.92) translateY(20px); }
+            to   { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* MODAL TABS */
+        .tab-btn {
+            padding: 0.6rem 1.5rem;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+            color: #94a3b8;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+        }
+        .tab-btn.active {
+            background: #16a34a;
+            color: white;
+        }
+        .tab-btn:not(.active):hover { color: #16a34a; }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* DETAIL ROW */
+        .detail-row {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .detail-row:last-child { border-bottom: none; }
+        .detail-key {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #94a3b8;
+        }
+        .detail-val {
+            font-size: 14px;
+            color: #1e293b;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen">
@@ -116,73 +198,62 @@
         <div class="mb-10">
             <span class="text-xs font-bold tracking-widest uppercase text-green-700">Admin Panel</span>
             <h1 class="text-4xl serif mt-2 text-slate-900">Mediation Reports</h1>
-            <p class="text-slate-500 mt-2 text-sm">Enter and manage mediation case reports. Reports will appear in the Legal Division Overview on the public portal.</p>
+            <p class="text-slate-500 mt-2 text-sm">Enter and manage mediation case reports. Click any row to view or edit details.</p>
         </div>
 
         <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
 
-            <!-- FORM -->
+            <!-- ADD REPORT FORM -->
             <div class="xl:col-span-1">
                 <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm sticky top-6">
                     <div class="h-1 bg-green-600"></div>
                     <div class="p-7">
                         <h2 class="font-bold text-lg text-slate-900 mb-6">Add New Report</h2>
-
                         <form id="reportForm" class="space-y-4">
 
                             <div>
                                 <label class="form-label">Case No.</label>
                                 <input type="text" id="caseNo" class="form-input" placeholder="e.g. ALI-2026-001" required>
                             </div>
-
+                            <div>
+                                <label class="form-label">Subject Lot No.</label>
+                                <input type="text" id="lotNo" class="form-input" placeholder="e.g. Lot 123-A" required>
+                            </div>
+                            <div>
+                                <label class="form-label">Issue</label>
+                                <textarea id="issue" rows="2" class="form-input resize-none" placeholder="e.g. Land ownership dispute..." required></textarea>
+                            </div>
                             <div>
                                 <label class="form-label">Complainant (Party A)</label>
                                 <input type="text" id="partyA" class="form-input" placeholder="Full name" required>
                             </div>
-
                             <div>
                                 <label class="form-label">Respondent (Party B)</label>
                                 <input type="text" id="partyB" class="form-input" placeholder="Full name" required>
                             </div>
-
                             <div>
                                 <label class="form-label">Mediation Officer</label>
                                 <input type="text" id="officer" class="form-input" placeholder="e.g. Atty. Monilla" required>
                             </div>
-
                             <div>
                                 <label class="form-label">Date of Mediation</label>
                                 <input type="date" id="mediationDate" class="form-input" required>
                             </div>
-
                             <div>
                                 <label class="form-label">Municipality</label>
                                 <select id="municipality" class="form-input" required>
                                     <option value="">Select Municipality</option>
                                     <optgroup label="1st District">
-                                        <option>Tiwi</option>
-                                        <option>Malinao</option>
-                                        <option>Malilipot</option>
-                                        <option>Bacacay</option>
-                                        <option>Sto. Domingo</option>
+                                        <option>Tiwi</option><option>Malinao</option><option>Malilipot</option><option>Bacacay</option><option>Sto. Domingo</option>
                                     </optgroup>
                                     <optgroup label="2nd District">
-                                        <option>Daraga</option>
-                                        <option>Camalig</option>
-                                        <option>Rapu-Rapu</option>
-                                        <option>Manito</option>
+                                        <option>Daraga</option><option>Camalig</option><option>Rapu-Rapu</option><option>Manito</option>
                                     </optgroup>
                                     <optgroup label="3rd District">
-                                        <option>Guinobatan</option>
-                                        <option>Oas</option>
-                                        <option>Jovellar</option>
-                                        <option>Pioduran</option>
-                                        <option>Polangui</option>
-                                        <option>Libon</option>
+                                        <option>Guinobatan</option><option>Oas</option><option>Jovellar</option><option>Pioduran</option><option>Polangui</option><option>Libon</option>
                                     </optgroup>
                                 </select>
                             </div>
-
                             <div>
                                 <label class="form-label">Status</label>
                                 <select id="status" class="form-input" required>
@@ -201,7 +272,6 @@
                                 </svg>
                                 Add Report
                             </button>
-
                         </form>
                     </div>
                 </div>
@@ -232,13 +302,10 @@
 
                 <!-- Filter Bar -->
                 <div class="bg-white border border-slate-200 rounded-2xl p-5 flex flex-col sm:flex-row gap-3 shadow-sm">
-                    <input type="text" id="search" class="form-input flex-1" placeholder="🔍  Search by case no., party, or municipality...">
+                    <input type="text" id="search" class="form-input flex-1" placeholder="🔍  Search by case no., lot no., party, or municipality...">
                     <select id="filter-status" class="form-input sm:w-44">
                         <option value="">All Statuses</option>
-                        <option>Pending</option>
-                        <option>Ongoing</option>
-                        <option>Resolved</option>
-                        <option>Failed</option>
+                        <option>Pending</option><option>Ongoing</option><option>Resolved</option><option>Failed</option>
                     </select>
                     <select id="filter-municipality" class="form-input sm:w-48">
                         <option value="">All Municipalities</option>
@@ -254,6 +321,9 @@
                     </select>
                 </div>
 
+                <!-- Hint -->
+                <p class="text-xs text-slate-400 italic px-1">💡 Click any row to view or edit case details.</p>
+
                 <!-- Table -->
                 <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
                     <div class="overflow-x-auto">
@@ -261,17 +331,16 @@
                             <thead>
                                 <tr class="border-b border-slate-100 bg-slate-50">
                                     <th class="text-left px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">Case No.</th>
+                                    <th class="text-left px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">Lot No.</th>
                                     <th class="text-left px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">Parties</th>
-                                    <th class="text-left px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">Officer</th>
-                                    <th class="text-left px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">Date</th>
                                     <th class="text-left px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">Municipality</th>
+                                    <th class="text-left px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">Date</th>
                                     <th class="text-left px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">Status</th>
-                                    <th class="text-left px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400"></th>
                                 </tr>
                             </thead>
                             <tbody id="reportTableBody">
                                 <tr id="empty-row">
-                                    <td colspan="7" class="text-center py-16 text-slate-400 text-sm italic">
+                                    <td colspan="6" class="text-center py-16 text-slate-400 text-sm italic">
                                         No reports yet. Add your first mediation report.
                                     </td>
                                 </tr>
@@ -281,6 +350,131 @@
                 </div>
 
             </div>
+        </div>
+    </div>
+
+    <!-- ─── CASE MODAL ─────────────────────────────────────────── -->
+    <div id="case-modal">
+        <div class="modal-box">
+
+            <!-- Modal Header -->
+            <div class="flex items-start justify-between p-6 border-b border-slate-100">
+                <div>
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-green-700 mb-1">Mediation Case</p>
+                    <h2 id="modal-case-no" class="text-2xl serif text-slate-900">ALI-2026-001</h2>
+                </div>
+                <button onclick="closeModal()"
+                        class="text-slate-400 hover:text-slate-700 transition-colors p-1 rounded-lg hover:bg-slate-100">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Tabs -->
+            <div class="flex gap-2 px-6 pt-5 pb-0">
+                <button class="tab-btn active" onclick="switchTab('details', this)">
+                    📋 Details
+                </button>
+                <button class="tab-btn" onclick="switchTab('edit', this)">
+                    ✏️ Edit
+                </button>
+            </div>
+
+            <!-- Tab: Details -->
+            <div id="tab-details" class="tab-content active px-6 py-5">
+                <div id="detail-rows"></div>
+
+                <!-- Delete button -->
+                <div class="mt-6 pt-4 border-t border-slate-100">
+                    <button id="delete-btn"
+                            class="w-full flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 font-bold py-3 rounded-xl text-sm transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                        Delete This Case
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tab: Edit -->
+            <div id="tab-edit" class="tab-content px-6 py-5">
+                <form id="editForm" class="space-y-4">
+                    <input type="hidden" id="edit-id">
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="form-label">Case No.</label>
+                            <input type="text" id="edit-caseNo" class="form-input" required>
+                        </div>
+                        <div>
+                            <label class="form-label">Subject Lot No.</label>
+                            <input type="text" id="edit-lotNo" class="form-input">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="form-label">Issue</label>
+                        <textarea id="edit-issue" rows="2" class="form-input resize-none"></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="form-label">Complainant (Party A)</label>
+                            <input type="text" id="edit-partyA" class="form-input" required>
+                        </div>
+                        <div>
+                            <label class="form-label">Respondent (Party B)</label>
+                            <input type="text" id="edit-partyB" class="form-input" required>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="form-label">Mediation Officer</label>
+                        <input type="text" id="edit-officer" class="form-input" required>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="form-label">Date of Mediation</label>
+                            <input type="date" id="edit-date" class="form-input" required>
+                        </div>
+                        <div>
+                            <label class="form-label">Municipality</label>
+                            <select id="edit-municipality" class="form-input" required>
+                                <optgroup label="1st District">
+                                    <option>Tiwi</option><option>Malinao</option><option>Malilipot</option><option>Bacacay</option><option>Sto. Domingo</option>
+                                </optgroup>
+                                <optgroup label="2nd District">
+                                    <option>Daraga</option><option>Camalig</option><option>Rapu-Rapu</option><option>Manito</option>
+                                </optgroup>
+                                <optgroup label="3rd District">
+                                    <option>Guinobatan</option><option>Oas</option><option>Jovellar</option><option>Pioduran</option><option>Polangui</option><option>Libon</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="form-label">Status</label>
+                        <select id="edit-status" class="form-input" required>
+                            <option value="Pending">Pending</option>
+                            <option value="Ongoing">Ongoing</option>
+                            <option value="Resolved">Resolved</option>
+                            <option value="Failed">Failed</option>
+                        </select>
+                    </div>
+
+                    <button type="submit"
+                            class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3.5 rounded-xl transition-all text-sm tracking-wide flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        Save Changes
+                    </button>
+                </form>
+            </div>
+
         </div>
     </div>
 
@@ -303,48 +497,38 @@
             navigateTo('index.html');
         });
 
-        // ─── STORAGE KEY ───────────────────────────────────────────
+        // ─── STORAGE ───────────────────────────────────────────────
         const STORAGE_KEY = 'dar_mediation_reports';
-
-        // ─── LOAD REPORTS ──────────────────────────────────────────
-        function getReports() {
-            return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-        }
-
-        function saveReports(reports) {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(reports));
-        }
+        function getReports()          { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+        function saveReports(reports)  { localStorage.setItem(STORAGE_KEY, JSON.stringify(reports)); }
 
         // ─── STATUS BADGE ──────────────────────────────────────────
         function statusBadge(status) {
-            const map = {
-                'Pending':  'status-pending',
-                'Ongoing':  'status-ongoing',
-                'Resolved': 'status-resolved',
-                'Failed':   'status-failed',
-            };
+            const map = { 'Pending':'status-pending','Ongoing':'status-ongoing','Resolved':'status-resolved','Failed':'status-failed' };
             return `<span class="status-badge ${map[status] || ''}">${status}</span>`;
         }
 
         // ─── RENDER TABLE ──────────────────────────────────────────
-        function renderTable(filter = '', filterStatus = '', filterMun = '') {
-            const reports = getReports();
-            const tbody   = document.getElementById('reportTableBody');
+        function renderTable(filter='', filterStatus='', filterMun='') {
+            const reports  = getReports();
+            const tbody    = document.getElementById('reportTableBody');
             const emptyRow = document.getElementById('empty-row');
 
             const filtered = reports.filter(r => {
-                const matchSearch = !filter ||
-                    r.caseNo.toLowerCase().includes(filter) ||
-                    r.partyA.toLowerCase().includes(filter) ||
-                    r.partyB.toLowerCase().includes(filter) ||
-                    r.municipality.toLowerCase().includes(filter) ||
-                    r.officer.toLowerCase().includes(filter);
+                const q = filter.toLowerCase();
+                const matchSearch = !q ||
+                    r.caseNo.toLowerCase().includes(q) ||
+                    (r.lotNo||'').toLowerCase().includes(q) ||
+                    (r.issue||'').toLowerCase().includes(q) ||
+                    r.partyA.toLowerCase().includes(q) ||
+                    r.partyB.toLowerCase().includes(q) ||
+                    r.municipality.toLowerCase().includes(q) ||
+                    r.officer.toLowerCase().includes(q);
                 const matchStatus = !filterStatus || r.status === filterStatus;
                 const matchMun    = !filterMun    || r.municipality === filterMun;
                 return matchSearch && matchStatus && matchMun;
             });
 
-            // Clear existing rows (keep empty-row)
             Array.from(tbody.querySelectorAll('tr:not(#empty-row)')).forEach(r => r.remove());
 
             if (filtered.length === 0) {
@@ -353,26 +537,19 @@
                 emptyRow.style.display = 'none';
                 filtered.slice().reverse().forEach(r => {
                     const tr = document.createElement('tr');
-                    tr.className = 'border-b border-slate-50 transition-colors';
+                    tr.className = 'report-row border-b border-slate-50';
                     tr.innerHTML = `
-                        <td class="px-5 py-4 font-mono text-xs font-bold text-slate-700">${r.caseNo}</td>
+                        <td class="px-5 py-4 font-mono text-xs font-bold text-slate-700 whitespace-nowrap">${r.caseNo}</td>
+                        <td class="px-5 py-4 text-xs text-slate-600 whitespace-nowrap">${r.lotNo || '—'}</td>
                         <td class="px-5 py-4">
-                            <p class="font-medium text-slate-900 text-xs">${r.partyA}</p>
-                            <p class="text-slate-400 text-xs">vs. ${r.partyB}</p>
+                            <p class="font-medium text-slate-900 text-xs whitespace-nowrap">${r.partyA}</p>
+                            <p class="text-slate-400 text-xs whitespace-nowrap">vs. ${r.partyB}</p>
                         </td>
-                        <td class="px-5 py-4 text-xs text-slate-600">${r.officer}</td>
+                        <td class="px-5 py-4 text-xs text-slate-600 whitespace-nowrap">${r.municipality}</td>
                         <td class="px-5 py-4 text-xs text-slate-500 whitespace-nowrap">${r.date}</td>
-                        <td class="px-5 py-4 text-xs text-slate-600">${r.municipality}</td>
                         <td class="px-5 py-4">${statusBadge(r.status)}</td>
-                        <td class="px-5 py-4">
-                            <button onclick="deleteReport('${r.id}')"
-                                    class="text-slate-300 hover:text-red-500 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                </svg>
-                            </button>
-                        </td>
                     `;
+                    tr.addEventListener('click', () => openModal(r.id));
                     tbody.appendChild(tr);
                 });
             }
@@ -380,22 +557,23 @@
             updateCounts();
         }
 
-        // ─── UPDATE SUMMARY COUNTS ─────────────────────────────────
+        // ─── UPDATE COUNTS ─────────────────────────────────────────
         function updateCounts() {
             const reports = getReports();
-            document.getElementById('count-total').textContent   = reports.length;
-            document.getElementById('count-pending').textContent = reports.filter(r => r.status === 'Pending').length;
-            document.getElementById('count-resolved').textContent= reports.filter(r => r.status === 'Resolved').length;
-            document.getElementById('count-ongoing').textContent = reports.filter(r => r.status === 'Ongoing').length;
+            document.getElementById('count-total').textContent    = reports.length;
+            document.getElementById('count-pending').textContent  = reports.filter(r => r.status==='Pending').length;
+            document.getElementById('count-resolved').textContent = reports.filter(r => r.status==='Resolved').length;
+            document.getElementById('count-ongoing').textContent  = reports.filter(r => r.status==='Ongoing').length;
         }
 
         // ─── ADD REPORT ────────────────────────────────────────────
         document.getElementById('reportForm').addEventListener('submit', function(e) {
             e.preventDefault();
-
             const report = {
                 id:           Date.now().toString(),
                 caseNo:       document.getElementById('caseNo').value.trim(),
+                lotNo:        document.getElementById('lotNo').value.trim(),
+                issue:        document.getElementById('issue').value.trim(),
                 partyA:       document.getElementById('partyA').value.trim(),
                 partyB:       document.getElementById('partyB').value.trim(),
                 officer:      document.getElementById('officer').value.trim(),
@@ -404,36 +582,121 @@
                 status:       document.getElementById('status').value,
                 createdAt:    new Date().toISOString(),
             };
-
             const reports = getReports();
             reports.push(report);
             saveReports(reports);
-
-            // Reset form
             this.reset();
-
-            // Render
-            renderTable(
-                document.getElementById('search').value.toLowerCase(),
-                document.getElementById('filter-status').value,
-                document.getElementById('filter-municipality').value
-            );
-
-            showToast('Report saved successfully!');
+            applyFilters();
+            showToast('Report added successfully!');
         });
 
-        // ─── DELETE REPORT ─────────────────────────────────────────
-        function deleteReport(id) {
-            if (!confirm('Delete this report?')) return;
-            const reports = getReports().filter(r => r.id !== id);
-            saveReports(reports);
-            renderTable(
-                document.getElementById('search').value.toLowerCase(),
-                document.getElementById('filter-status').value,
-                document.getElementById('filter-municipality').value
-            );
-            showToast('Report deleted.');
+        // ─── MODAL ─────────────────────────────────────────────────
+        let currentId = null;
+
+        function openModal(id) {
+            const report = getReports().find(r => r.id === id);
+            if (!report) return;
+            currentId = id;
+
+            // Set header
+            document.getElementById('modal-case-no').textContent = report.caseNo;
+
+            // Fill Details tab
+            const detailRows = document.getElementById('detail-rows');
+            detailRows.innerHTML = [
+                ['Case No.',         report.caseNo],
+                ['Subject Lot No.',  report.lotNo || '—'],
+                ['Issue',            report.issue || '—'],
+                ['Complainant',      report.partyA],
+                ['Respondent',       report.partyB],
+                ['Mediation Officer',report.officer],
+                ['Date',             report.date],
+                ['Municipality',     report.municipality],
+                ['Status',           report.status],
+            ].map(([key, val]) => `
+                <div class="detail-row">
+                    <span class="detail-key">${key}</span>
+                    <span class="detail-val">${key === 'Status' ? statusBadge(val) : val}</span>
+                </div>
+            `).join('');
+
+            // Fill Edit tab
+            document.getElementById('edit-id').value           = report.id;
+            document.getElementById('edit-caseNo').value       = report.caseNo;
+            document.getElementById('edit-lotNo').value        = report.lotNo || '';
+            document.getElementById('edit-issue').value        = report.issue || '';
+            document.getElementById('edit-partyA').value       = report.partyA;
+            document.getElementById('edit-partyB').value       = report.partyB;
+            document.getElementById('edit-officer').value      = report.officer;
+            document.getElementById('edit-date').value         = report.date;
+            document.getElementById('edit-municipality').value = report.municipality;
+            document.getElementById('edit-status').value       = report.status;
+
+            // Reset to details tab
+            switchTab('details', document.querySelector('.tab-btn'));
+
+            // Show modal
+            document.getElementById('case-modal').classList.add('open');
+            document.body.style.overflow = 'hidden';
         }
+
+        function closeModal() {
+            document.getElementById('case-modal').classList.remove('open');
+            document.body.style.overflow = '';
+            currentId = null;
+        }
+
+        // Close on backdrop click
+        document.getElementById('case-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // ─── TABS ──────────────────────────────────────────────────
+        function switchTab(tab, btn) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`tab-${tab}`).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        // ─── EDIT SAVE ─────────────────────────────────────────────
+        document.getElementById('editForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const id      = document.getElementById('edit-id').value;
+            const reports = getReports();
+            const idx     = reports.findIndex(r => r.id === id);
+            if (idx === -1) return;
+
+            reports[idx] = {
+                ...reports[idx],
+                caseNo:       document.getElementById('edit-caseNo').value.trim(),
+                lotNo:        document.getElementById('edit-lotNo').value.trim(),
+                issue:        document.getElementById('edit-issue').value.trim(),
+                partyA:       document.getElementById('edit-partyA').value.trim(),
+                partyB:       document.getElementById('edit-partyB').value.trim(),
+                officer:      document.getElementById('edit-officer').value.trim(),
+                date:         document.getElementById('edit-date').value,
+                municipality: document.getElementById('edit-municipality').value,
+                status:       document.getElementById('edit-status').value,
+                updatedAt:    new Date().toISOString(),
+            };
+
+            saveReports(reports);
+            closeModal();
+            applyFilters();
+            showToast('Case updated successfully!');
+        });
+
+        // ─── DELETE ────────────────────────────────────────────────
+        document.getElementById('delete-btn').addEventListener('click', function() {
+            if (!currentId) return;
+            if (!confirm('Are you sure you want to delete this case? This cannot be undone.')) return;
+            const reports = getReports().filter(r => r.id !== currentId);
+            saveReports(reports);
+            closeModal();
+            applyFilters();
+            showToast('Case deleted.');
+        });
 
         // ─── FILTERS ───────────────────────────────────────────────
         document.getElementById('search').addEventListener('input', applyFilters);
@@ -442,7 +705,7 @@
 
         function applyFilters() {
             renderTable(
-                document.getElementById('search').value.toLowerCase(),
+                document.getElementById('search').value,
                 document.getElementById('filter-status').value,
                 document.getElementById('filter-municipality').value
             );
