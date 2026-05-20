@@ -136,30 +136,35 @@
 <body class="bg-slate-50 min-h-screen">
 
     <!-- NAV -->
-    <nav class="bg-green-600 text-white shadow-md px-6 md:px-12 py-5 flex justify-between items-center rounded-bl-3xl rounded-br-3xl">
-        <div class="flex items-center gap-3">
-            <img src="Assets/images/logo.png" alt="DAR Logo" class="h-10 w-auto object-contain">
-            <div>
-                <p class="text-sm font-bold uppercase tracking-tight leading-tight">DAR Legal Division</p>
-                <p class="text-xs text-green-200 tracking-wide">Admin Dashboard</p>
-            </div>
-        </div>
-        <div class="flex items-center gap-4">
-            <a href="index.html" id="portal-link"
-               class="text-xs font-bold uppercase tracking-widest text-green-200 hover:text-white transition-colors flex items-center gap-1.5">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-                </svg>
-                Back to Portal
-            </a>
-            <div class="w-px h-5 bg-green-400/50"></div>
-            <div class="flex items-center gap-2">
-                <div class="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center">
-                    <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
-                    </svg>
+    <nav class="relative z-50" style="background: linear-gradient(135deg, #15803d 0%, #166534 60%, #14532d 100%); box-shadow: 0 4px 24px rgba(0,0,0,0.18); border-radius: 0 0 1.5rem 1.5rem;">
+        <div class="h-1 w-full" style="background: linear-gradient(90deg, #4ade80, #16a34a, #4ade80);"></div>
+        <div class="flex justify-between items-center px-6 md:px-12 py-4">
+            <div class="flex items-center space-x-4">
+                <div class="bg-white rounded-full p-1 shadow-md flex-shrink-0">
+                    <img src="Assets/images/logo.png" alt="DAR Logo" class="h-10 md:h-12 w-auto object-contain">
                 </div>
-                <span class="text-xs font-semibold text-green-100">Admin</span>
+                <div class="flex flex-col">
+                    <span class="text-base md:text-lg font-extrabold tracking-tight uppercase leading-tight text-white">Department of Agrarian Reform</span>
+                    <span class="text-xs text-green-200 tracking-widest uppercase font-medium">Legal Division — Admin Dashboard</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="index.html" id="portal-link"
+                   class="text-xs font-bold uppercase tracking-widest text-green-200 hover:text-white transition-colors flex items-center gap-1.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    Back to Portal
+                </a>
+                <div class="w-px h-5 bg-green-400/50"></div>
+                <div class="flex items-center gap-2">
+                    <div class="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                        </svg>
+                    </div>
+                    <span class="text-xs font-semibold text-green-100">Admin</span>
+                </div>
             </div>
         </div>
     </nav>
@@ -352,12 +357,12 @@
                             <table class="w-full text-sm">
                                 <thead>
                                     <tr class="border-b border-slate-100 bg-slate-50">
+                                        <th class="text-left px-5 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">Parties</th>
                                         <th class="text-left px-5 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">Case No.</th>
                                         <th class="text-left px-5 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">Lot No.</th>
-                                        <th class="text-left px-5 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">Parties</th>
                                         <th class="text-left px-5 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">Issue</th>
                                         <th class="text-left px-5 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">Municipality</th>
-                                        <th class="text-left px-5 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">Status</th>
+                                        <th class="text-left px-5 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">Date</th>
                                     </tr>
                                 </thead>
                                 <tbody id="reportTableBody">
@@ -520,11 +525,17 @@
             applyFilters();
         }
 
+        // Normalize name for comparison
+        function normalizeName(name) {
+            return (name||'').trim().toLowerCase().replace(/\s+/g, ' ');
+        }
+
         function renderTable(filter='', filterMun='') {
             const reports  = getReports();
             const tbody    = document.getElementById('reportTableBody');
             const emptyRow = document.getElementById('empty-row');
 
+            // Filter first
             const filtered = reports.filter(r => {
                 const q = filter.toLowerCase();
                 const matchSearch = !q ||
@@ -547,28 +558,105 @@
                 emptyRow.querySelector('td').textContent = activeFolder === 'all'
                     ? 'No reports yet. Add your first mediation report.'
                     : `No ${activeFolder} cases found.`;
-            } else {
-                emptyRow.style.display = 'none';
-                filtered.slice().reverse().forEach(r => {
-                    const tr = document.createElement('tr');
-                    tr.className = 'report-row border-b border-slate-50';
+                updateCounts();
+                return;
+            }
+
+            emptyRow.style.display = 'none';
+
+            // Group by normalized party name (partyA or partyB)
+            const partyMap = {}; // key: normalized name, value: { displayName, cases[] }
+            filtered.forEach(r => {
+                const keyA = normalizeName(r.partyA);
+                const keyB = normalizeName(r.partyB);
+                // Index by partyA
+                if (!partyMap[keyA]) partyMap[keyA] = { displayName: r.partyA.trim(), cases: [] };
+                partyMap[keyA].cases.push(r);
+                // Index by partyB only if different from partyA
+                if (keyB !== keyA) {
+                    if (!partyMap[keyB]) partyMap[keyB] = { displayName: r.partyB.trim(), cases: [] };
+                    // Avoid duplicate case
+                    if (!partyMap[keyB].cases.find(c => c.id === r.id)) {
+                        partyMap[keyB].cases.push(r);
+                    }
+                }
+            });
+
+            // Deduplicate: collect all unique cases across merged groups
+            // We render by unique cases but show merged party row if name appears multiple times
+            // Strategy: group filtered cases by normalized partyA name
+            const groups = {}; // key: normalizeName(partyA), value: { name, cases[] }
+            filtered.slice().reverse().forEach(r => {
+                const key = normalizeName(r.partyA);
+                if (!groups[key]) groups[key] = { name: r.partyA.trim(), cases: [] };
+                groups[key].cases.push(r);
+            });
+
+            Object.values(groups).forEach(group => {
+                const isMultiple = group.cases.length > 1;
+                const firstCase  = group.cases[0];
+
+                const tr = document.createElement('tr');
+                tr.className = 'report-row border-b border-slate-50';
+
+                if (isMultiple) {
+                    // Merged row - shows party name with case count badge and dropdown
                     tr.innerHTML = `
-                        <td class="px-5 py-3 font-mono text-xs font-bold text-slate-700 whitespace-nowrap">${r.caseNo}</td>
-                        <td class="px-5 py-3 text-xs text-slate-600 whitespace-nowrap">${r.lotNo||'—'}</td>
+                        <td class="px-5 py-3">
+                            <div class="flex items-center gap-2">
+                                <div>
+                                    <p class="font-semibold text-slate-900 text-xs">${group.name}</p>
+                                    <p class="text-slate-400 text-[10px] mt-0.5">Multiple cases</p>
+                                </div>
+                                <span class="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded-full">${group.cases.length} cases</span>
+                            </div>
+                        </td>
+                        <td class="px-5 py-3" colspan="4">
+                            <div class="flex items-center gap-2">
+                                <select class="case-dropdown text-xs border border-slate-200 rounded-lg px-2 py-1.5 bg-white text-slate-700 font-mono font-bold focus:outline-none focus:border-green-500 cursor-pointer" style="min-width:160px;">
+                                    <option value="">— Select Case No. —</option>
+                                    ${group.cases.map(c => `<option value="${c.id}">${c.caseNo} · ${c.status}</option>`).join('')}
+                                </select>
+                                <span class="text-[10px] text-slate-400 italic">Click to view case</span>
+                            </div>
+                        </td>
+                        <td class="px-5 py-3 text-xs text-slate-400 text-right">
+                            <svg class="w-4 h-4 inline text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        </td>
+                    `;
+                    // Dropdown opens modal for selected case
+                    tr.querySelector('.case-dropdown').addEventListener('change', function() {
+                        if (this.value) {
+                            openModal(this.value);
+                            this.value = '';
+                        }
+                    });
+                    // Row click still opens first case
+                    tr.addEventListener('click', function(e) {
+                        if (e.target.tagName === 'SELECT' || e.target.tagName === 'OPTION') return;
+                        openModal(firstCase.id);
+                    });
+                } else {
+                    // Single case row
+                    const r = firstCase;
+                    tr.innerHTML = `
                         <td class="px-5 py-3">
                             <p class="font-medium text-slate-900 text-xs whitespace-nowrap">${r.partyA}</p>
                             <p class="text-slate-400 text-xs whitespace-nowrap">vs. ${r.partyB}</p>
                         </td>
+                        <td class="px-5 py-3 font-mono text-xs font-bold text-slate-700 whitespace-nowrap">${r.caseNo}</td>
+                        <td class="px-5 py-3 text-xs text-slate-600 whitespace-nowrap">${r.lotNo||'—'}</td>
                         <td class="px-5 py-3 text-xs text-slate-500 max-w-[140px]">
                             <span title="${r.issue||''}" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${r.issue||'—'}</span>
                         </td>
                         <td class="px-5 py-3 text-xs text-slate-600 whitespace-nowrap">${r.municipality}</td>
-                        <td class="px-5 py-3">${statusBadge(r.status)}</td>
+                        <td class="px-5 py-3 text-xs text-slate-500 whitespace-nowrap">${r.date}</td>
                     `;
                     tr.addEventListener('click', () => openModal(r.id));
-                    tbody.appendChild(tr);
-                });
-            }
+                }
+
+                tbody.appendChild(tr);
+            });
 
             updateCounts();
         }
