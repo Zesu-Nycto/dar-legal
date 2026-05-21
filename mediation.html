@@ -264,7 +264,7 @@
                                     <input type="text" id="partyB" class="form-input" placeholder="Full name">
                                 </div>
                                 <div>
-                                    <label class="form-label">Issue</label>
+                                    <label class="form-label">Main Issue</label>
                                     <textarea id="issue" rows="2" class="form-input resize-none" placeholder="e.g. Land ownership dispute..."></textarea>
                                 </div>
                             </div>
@@ -426,7 +426,7 @@
                         <div><label class="form-label">Complainant (Party A)</label><input type="text" id="edit-partyA" class="form-input"></div>
                         <div><label class="form-label">Respondent (Party B)</label><input type="text" id="edit-partyB" class="form-input"></div>
                     </div>
-                    <div><label class="form-label">Issue</label><textarea id="edit-issue" rows="2" class="form-input resize-none"></textarea></div>
+                    <div><label class="form-label">Main Issue</label><textarea id="edit-issue" rows="2" class="form-input resize-none"></textarea></div>
                     <div><label class="form-label">Mediation Officer</label><input type="text" id="edit-officer" class="form-input"></div>
                     <div>
                         <label class="form-label">Status</label>
@@ -741,8 +741,8 @@
                 </td>
                 <td class="px-5 py-3.5 font-mono text-xs font-bold text-green-700 whitespace-nowrap">${r.caseNo}</td>
                 <td class="px-5 py-3.5 text-xs text-slate-500 whitespace-nowrap">${r.lotNo||'—'}</td>
-                <td class="px-5 py-3.5 text-xs text-slate-500 max-w-[140px]" title="${r.issue||''}">
-                    <span style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${r.issue||'—'}</span>
+                <td class="px-5 py-3.5 text-xs text-slate-500 max-w-[140px]" title="${r.||''}">
+                    <span style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${r.||'—'}</span>
                 </td>
                 <td class="px-5 py-3.5 text-xs text-slate-500 whitespace-nowrap">${r.municipality}</td>
                 <td class="px-5 py-3.5 text-xs text-slate-400 whitespace-nowrap">${r.date}</td>
