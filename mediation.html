@@ -223,37 +223,45 @@
                                             <option value="LRC">LRC</option>
                                             <option value="Others">Others</option>
                                         </select>
-                                        <input type="text" id="caseNum" class="form-input" placeholder="e.g. 2026-001" required>
+                                        <input type="text" id="caseNum" class="form-input" placeholder="e.g. 2026-001">
                                     </div>
                                     <p class="text-[10px] text-slate-400 mt-1 pl-1">Select type then enter the case number</p>
                                 </div>
                                 <div>
                                     <label class="form-label">Subject Lot No.</label>
-                                    <input type="text" id="lotNo" class="form-input" placeholder="e.g. Lot 123-A" required>
+                                    <input type="text" id="lotNo" class="form-input" placeholder="e.g. Lot 123-A">
                                 </div>
                                 <div>
                                     <label class="form-label">Date of Mediation</label>
-                                    <input type="date" id="mediationDate" class="form-input" required>
+                                    <input type="date" id="mediationDate" class="form-input">
                                 </div>
                                 <div>
-                                    <label class="form-label">Municipality</label>
-                                    <select id="municipality" class="form-input" required>
-                                        <option value="">Select Municipality</option>
-                                        <optgroup label="1st District"><option>Tiwi</option><option>Malinao</option><option>Malilipot</option><option>Bacacay</option><option>Sto. Domingo</option></optgroup>
-                                        <optgroup label="2nd District"><option>Daraga</option><option>Camalig</option><option>Rapu-Rapu</option><option>Manito</option></optgroup>
-                                        <optgroup label="3rd District"><option>Guinobatan</option><option>Oas</option><option>Jovellar</option><option>Pioduran</option><option>Polangui</option><option>Libon</option></optgroup>
-                                    </select>
+                                    <label class="form-label">Place of Mediation</label>
+                                    <input type="text" id="placeOfMediation" class="form-input" placeholder="e.g. DAR Office, Legazpi City">
+                                </div>
+                                <div>
+                                    <label class="form-label">Location of Property</label>
+                                    <div class="space-y-2">
+                                        <input type="text" id="propBrgy" class="form-input" placeholder="Barangay">
+                                        <select id="propCity" class="form-input">
+                                            <option value="">City / Municipality</option>
+                                            <optgroup label="1st District"><option>Tiwi</option><option>Malinao</option><option>Malilipot</option><option>Bacacay</option><option>Sto. Domingo</option></optgroup>
+                                            <optgroup label="2nd District"><option>Daraga</option><option>Camalig</option><option>Rapu-Rapu</option><option>Manito</option></optgroup>
+                                            <optgroup label="3rd District"><option>Guinobatan</option><option>Oas</option><option>Jovellar</option><option>Pioduran</option><option>Polangui</option><option>Libon</option></optgroup>
+                                        </select>
+                                        <input type="text" class="form-input bg-slate-50 text-slate-400" value="Albay" disabled>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-section space-y-3">
                                 <span class="form-section-label">Parties Involved</span>
                                 <div>
                                     <label class="form-label">Complainant (Party A)</label>
-                                    <input type="text" id="partyA" class="form-input" placeholder="Full name" required>
+                                    <input type="text" id="partyA" class="form-input" placeholder="Full name">
                                 </div>
                                 <div>
                                     <label class="form-label">Respondent (Party B)</label>
-                                    <input type="text" id="partyB" class="form-input" placeholder="Full name" required>
+                                    <input type="text" id="partyB" class="form-input" placeholder="Full name">
                                 </div>
                                 <div>
                                     <label class="form-label">Issue</label>
@@ -264,17 +272,17 @@
                                 <span class="form-section-label">Assignment</span>
                                 <div>
                                     <label class="form-label">Mediation Officer</label>
-                                    <input type="text" id="officer" class="form-input" placeholder="e.g. Atty. Monilla" required>
+                                    <input type="text" id="officer" class="form-input" placeholder="e.g. Atty. Monilla">
                                 </div>
                                 <div>
                                     <label class="form-label">Status</label>
-                                    <select id="status" class="form-input" required>
+                                    <select id="status" class="form-input" onchange="toggleOthersInput(this, 'status-others')">
                                         <option value="">Select Status</option>
-                                        <option value="Pending">🟡 Pending</option>
-                                        <option value="Ongoing">🔵 Ongoing</option>
-                                        <option value="Resolved">🟢 Resolved</option>
-                                        <option value="Failed">🔴 Failed</option>
+                                        <option value="Amicable Settlement">Amicable Settlement</option>
+                                        <option value="Settlement Repudiated">Settlement Repudiated</option>
+                                        <option value="Others">Others</option>
                                     </select>
+                                    <input type="text" id="status-others" class="form-input mt-2" placeholder="Please specify..." style="display:none;">
                                 </div>
                             </div>
                             <button type="submit"
@@ -391,35 +399,43 @@
                     <input type="hidden" id="edit-id">
                     <div class="grid grid-cols-2 gap-4">
                         <div><label class="form-label">Case Type</label><select id="edit-caseType" class="form-input"><option value="ALI">ALI</option><option value="LRC">LRC</option><option value="Others">Others</option></select></div>
-                        <div><label class="form-label">Case Number</label><input type="text" id="edit-caseNum" class="form-input" required></div>
+                        <div><label class="form-label">Case Number</label><input type="text" id="edit-caseNum" class="form-input"></div>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div><label class="form-label">Subject Lot No.</label><input type="text" id="edit-lotNo" class="form-input"></div>
-                        <div><label class="form-label">Date</label><input type="date" id="edit-date" class="form-input" required></div>
+                        <div><label class="form-label">Date</label><input type="date" id="edit-date" class="form-input"></div>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
-                        <div><label class="form-label">Complainant (Party A)</label><input type="text" id="edit-partyA" class="form-input" required></div>
-                        <div><label class="form-label">Respondent (Party B)</label><input type="text" id="edit-partyB" class="form-input" required></div>
+                        <div><label class="form-label">Complainant (Party A)</label><input type="text" id="edit-partyA" class="form-input"></div>
+                        <div><label class="form-label">Respondent (Party B)</label><input type="text" id="edit-partyB" class="form-input"></div>
                     </div>
                     <div><label class="form-label">Issue</label><textarea id="edit-issue" rows="2" class="form-input resize-none"></textarea></div>
-                    <div><label class="form-label">Mediation Officer</label><input type="text" id="edit-officer" class="form-input" required></div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="form-label">Municipality</label>
-                            <select id="edit-municipality" class="form-input" required>
+                    <div><label class="form-label">Mediation Officer</label><input type="text" id="edit-officer" class="form-input"></div>
+                    <div>
+                        <label class="form-label">Status</label>
+                        <select id="edit-status" class="form-input" onchange="toggleOthersInput(this, 'edit-status-others')">
+                            <option value="">Select Status</option>
+                            <option value="Amicable Settlement">Amicable Settlement</option>
+                            <option value="Settlement Repudiated">Settlement Repudiated</option>
+                            <option value="Others">Others</option>
+                        </select>
+                        <input type="text" id="edit-status-others" class="form-input mt-2" placeholder="Please specify..." style="display:none;">
+                    </div>
+                    <div>
+                        <label class="form-label">Place of Mediation</label>
+                        <input type="text" id="edit-placeOfMediation" class="form-input" placeholder="e.g. DAR Office, Legazpi City">
+                    </div>
+                    <div>
+                        <label class="form-label">Location of Property</label>
+                        <div class="space-y-2">
+                            <input type="text" id="edit-propBrgy" class="form-input" placeholder="Barangay">
+                            <select id="edit-propCity" class="form-input">
+                                <option value="">City / Municipality</option>
                                 <optgroup label="1st District"><option>Tiwi</option><option>Malinao</option><option>Malilipot</option><option>Bacacay</option><option>Sto. Domingo</option></optgroup>
                                 <optgroup label="2nd District"><option>Daraga</option><option>Camalig</option><option>Rapu-Rapu</option><option>Manito</option></optgroup>
                                 <optgroup label="3rd District"><option>Guinobatan</option><option>Oas</option><option>Jovellar</option><option>Pioduran</option><option>Polangui</option><option>Libon</option></optgroup>
                             </select>
-                        </div>
-                        <div>
-                            <label class="form-label">Status</label>
-                            <select id="edit-status" class="form-input" required>
-                                <option value="Pending">🟡 Pending</option>
-                                <option value="Ongoing">🔵 Ongoing</option>
-                                <option value="Resolved">🟢 Resolved</option>
-                                <option value="Failed">🔴 Failed</option>
-                            </select>
+                            <input type="text" class="form-input bg-slate-50 text-slate-400" value="Albay" disabled>
                         </div>
                     </div>
                     <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3.5 rounded-xl transition-all text-sm tracking-wide flex items-center justify-center gap-2">
@@ -450,8 +466,9 @@
                     <div class="report-field"><span class="label">Case No.:</span><span class="value" id="rpt-caseNo"></span></div>
                     <div class="report-field"><span class="label">Subject Lot No.:</span><span class="value" id="rpt-lotNo"></span></div>
                     <div class="report-field"><span class="label">Date of Mediation:</span><span class="value" id="rpt-date"></span></div>
-                    <div class="report-field"><span class="label">Municipality:</span><span class="value" id="rpt-municipality"></span></div>
-                    <div class="report-field"><span class="label">Status:</span><span class="value" id="rpt-status"></span></div>
+                    <div class="report-field"><span class="label">Place of Mediation:</span><span class="value" id="rpt-placeOfMediation"></span></div>
+                    <div class="report-field"><span class="label">Location of Property:</span><span class="value" id="rpt-location"></span></div>
+                    <div class="report-field"><span class="label">Status / Outcome:</span><span class="value" id="rpt-status"></span></div>
 
                     <p class="report-section-title">II. Parties Involved</p>
                     <div class="report-field"><span class="label">Complainant (Party A):</span><span class="value" id="rpt-partyA"></span></div>
@@ -499,6 +516,14 @@
     </div>
 
     <script>
+        // ── OTHERS INPUT TOGGLE ───────────────────────────────────
+        function toggleOthersInput(select, inputId) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            input.style.display = select.value === 'Others' ? '' : 'none';
+            if (select.value !== 'Others') input.value = '';
+        }
+
         // ── NAV TRANSITION ────────────────────────────────────────
         function navigateTo(url) {
             document.body.classList.add('fade-out');
@@ -718,19 +743,27 @@
             e.preventDefault();
             const caseType = document.getElementById('caseType').value;
             const caseNum  = document.getElementById('caseNum').value.trim();
+            const statusVal    = document.getElementById('status').value;
+            const statusOthers = document.getElementById('status-others').value.trim();
+            const finalStatus  = statusVal === 'Others' && statusOthers ? `Others: ${statusOthers}` : statusVal;
+
             const report = {
-                id:           Date.now().toString(),
-                caseNo:       `${caseType}-${caseNum}`,
+                id:               Date.now().toString(),
+                caseNo:           `${caseType}-${caseNum}`,
                 caseType, caseNum,
-                lotNo:        document.getElementById('lotNo').value.trim(),
-                partyA:       document.getElementById('partyA').value.trim(),
-                partyB:       document.getElementById('partyB').value.trim(),
-                issue:        document.getElementById('issue').value.trim(),
-                officer:      document.getElementById('officer').value.trim(),
-                date:         document.getElementById('mediationDate').value,
-                municipality: document.getElementById('municipality').value,
-                status:       document.getElementById('status').value,
-                createdAt:    new Date().toISOString(),
+                lotNo:            document.getElementById('lotNo').value.trim(),
+                partyA:           document.getElementById('partyA').value.trim(),
+                partyB:           document.getElementById('partyB').value.trim(),
+                issue:            document.getElementById('issue').value.trim(),
+                officer:          document.getElementById('officer').value.trim(),
+                date:             document.getElementById('mediationDate').value,
+                placeOfMediation: document.getElementById('placeOfMediation').value.trim(),
+                propBrgy:         document.getElementById('propBrgy').value.trim(),
+                propCity:         document.getElementById('propCity').value,
+                propProvince:     'Albay',
+                municipality:     document.getElementById('propCity').value,
+                status:           finalStatus,
+                createdAt:        new Date().toISOString(),
             };
             const reports = getReports();
             reports.push(report);
@@ -752,16 +785,18 @@
             document.getElementById('modal-status-badge').innerHTML = statusBadge(r.status);
 
             // Details
+            const locStr = [r.propBrgy, r.propCity, 'Albay'].filter(Boolean).join(', ') || '—';
             document.getElementById('detail-rows').innerHTML = [
-                ['Case No.',          r.caseNo],
-                ['Subject Lot No.',   r.lotNo||'—'],
-                ['Complainant',       r.partyA],
-                ['Respondent',        r.partyB],
-                ['Issue',             r.issue||'—'],
-                ['Mediation Officer', r.officer],
-                ['Date',              r.date],
-                ['Municipality',      r.municipality],
-                ['Status',            r.status],
+                ['Case No.',            r.caseNo  || '—'],
+                ['Subject Lot No.',     r.lotNo   || '—'],
+                ['Complainant',         r.partyA  || '—'],
+                ['Respondent',          r.partyB  || '—'],
+                ['Issue',               r.issue   || '—'],
+                ['Mediation Officer',   r.officer || '—'],
+                ['Date',                r.date    || '—'],
+                ['Place of Mediation',  r.placeOfMediation || '—'],
+                ['Location of Property',locStr],
+                ['Status',              r.status  || '—'],
             ].map(([k,v]) => `
                 <div class="detail-row">
                     <span class="detail-key">${k}</span>
@@ -769,31 +804,47 @@
                 </div>`).join('');
 
             // Edit fields
-            document.getElementById('edit-id').value           = r.id;
-            document.getElementById('edit-caseType').value     = r.caseType || 'ALI';
-            document.getElementById('edit-caseNum').value      = r.caseNum  || r.caseNo;
-            document.getElementById('edit-lotNo').value        = r.lotNo    || '';
-            document.getElementById('edit-partyA').value       = r.partyA;
-            document.getElementById('edit-partyB').value       = r.partyB;
-            document.getElementById('edit-issue').value        = r.issue    || '';
-            document.getElementById('edit-officer').value      = r.officer;
-            document.getElementById('edit-date').value         = r.date;
-            document.getElementById('edit-municipality').value = r.municipality;
-            document.getElementById('edit-status').value       = r.status;
+            document.getElementById('edit-id').value                = r.id;
+            document.getElementById('edit-caseType').value          = r.caseType || 'ALI';
+            document.getElementById('edit-caseNum').value           = r.caseNum  || r.caseNo;
+            document.getElementById('edit-lotNo').value             = r.lotNo    || '';
+            document.getElementById('edit-partyA').value            = r.partyA   || '';
+            document.getElementById('edit-partyB').value            = r.partyB   || '';
+            document.getElementById('edit-issue').value             = r.issue    || '';
+            document.getElementById('edit-officer').value           = r.officer  || '';
+            document.getElementById('edit-date').value              = r.date     || '';
+            document.getElementById('edit-placeOfMediation').value  = r.placeOfMediation || '';
+            document.getElementById('edit-propBrgy').value          = r.propBrgy || '';
+            document.getElementById('edit-propCity').value          = r.propCity || '';
+
+            // Handle status with Others
+            const editStatusSel    = document.getElementById('edit-status');
+            const editStatusOthers = document.getElementById('edit-status-others');
+            if (r.status && r.status.startsWith('Others:')) {
+                editStatusSel.value = 'Others';
+                editStatusOthers.value = r.status.replace('Others: ', '').replace('Others:','').trim();
+                editStatusOthers.style.display = '';
+            } else {
+                editStatusSel.value = r.status || '';
+                editStatusOthers.style.display = 'none';
+                editStatusOthers.value = '';
+            }
 
             // Report fields
-            document.getElementById('rpt-caseNo').textContent      = r.caseNo;
-            document.getElementById('rpt-lotNo').textContent       = r.lotNo||'—';
-            document.getElementById('rpt-date').textContent        = r.date;
-            document.getElementById('rpt-municipality').textContent= r.municipality;
-            document.getElementById('rpt-status').textContent      = r.status;
-            document.getElementById('rpt-partyA').textContent      = r.partyA;
-            document.getElementById('rpt-partyB').textContent      = r.partyB;
-            document.getElementById('rpt-issue').textContent       = r.issue||'—';
-            document.getElementById('rpt-officer').textContent     = r.officer;
-            document.getElementById('rpt-partyA-sig').textContent  = r.partyA.toUpperCase();
-            document.getElementById('rpt-partyB-sig').textContent  = r.partyB.toUpperCase();
-            document.getElementById('rpt-officer-sig').textContent = r.officer.toUpperCase();
+            const locationStr = [r.propBrgy, r.propCity, 'Albay'].filter(Boolean).join(', ') || '—';
+            document.getElementById('rpt-caseNo').textContent           = r.caseNo || '—';
+            document.getElementById('rpt-lotNo').textContent            = r.lotNo  || '—';
+            document.getElementById('rpt-date').textContent             = r.date   || '—';
+            document.getElementById('rpt-placeOfMediation').textContent = r.placeOfMediation || '—';
+            document.getElementById('rpt-location').textContent         = locationStr;
+            document.getElementById('rpt-status').textContent           = r.status || '—';
+            document.getElementById('rpt-partyA').textContent           = r.partyA || '—';
+            document.getElementById('rpt-partyB').textContent           = r.partyB || '—';
+            document.getElementById('rpt-issue').textContent            = r.issue  || '—';
+            document.getElementById('rpt-officer').textContent          = r.officer|| '—';
+            document.getElementById('rpt-partyA-sig').textContent       = (r.partyA||'').toUpperCase();
+            document.getElementById('rpt-partyB-sig').textContent       = (r.partyB||'').toUpperCase();
+            document.getElementById('rpt-officer-sig').textContent      = (r.officer||'').toUpperCase();
 
             // Reset to details tab
             switchModalTab('details', document.querySelector('.modal-tab-btn'));
@@ -828,19 +879,27 @@
             if (idx === -1) return;
             const caseType = document.getElementById('edit-caseType').value;
             const caseNum  = document.getElementById('edit-caseNum').value.trim();
+            const editStatusVal    = document.getElementById('edit-status').value;
+            const editStatusOthers = document.getElementById('edit-status-others').value.trim();
+            const editFinalStatus  = editStatusVal === 'Others' && editStatusOthers ? `Others: ${editStatusOthers}` : editStatusVal;
+            const editCity         = document.getElementById('edit-propCity').value;
             reports[idx] = {
                 ...reports[idx],
-                caseNo: `${caseType}-${caseNum}`,
+                caseNo:           `${caseType}-${caseNum}`,
                 caseType, caseNum,
-                lotNo:        document.getElementById('edit-lotNo').value.trim(),
-                partyA:       document.getElementById('edit-partyA').value.trim(),
-                partyB:       document.getElementById('edit-partyB').value.trim(),
-                issue:        document.getElementById('edit-issue').value.trim(),
-                officer:      document.getElementById('edit-officer').value.trim(),
-                date:         document.getElementById('edit-date').value,
-                municipality: document.getElementById('edit-municipality').value,
-                status:       document.getElementById('edit-status').value,
-                updatedAt:    new Date().toISOString(),
+                lotNo:            document.getElementById('edit-lotNo').value.trim(),
+                partyA:           document.getElementById('edit-partyA').value.trim(),
+                partyB:           document.getElementById('edit-partyB').value.trim(),
+                issue:            document.getElementById('edit-issue').value.trim(),
+                officer:          document.getElementById('edit-officer').value.trim(),
+                date:             document.getElementById('edit-date').value,
+                placeOfMediation: document.getElementById('edit-placeOfMediation').value.trim(),
+                propBrgy:         document.getElementById('edit-propBrgy').value.trim(),
+                propCity:         editCity,
+                propProvince:     'Albay',
+                municipality:     editCity,
+                status:           editFinalStatus,
+                updatedAt:        new Date().toISOString(),
             };
             saveReports(reports);
             closeModal();
