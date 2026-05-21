@@ -939,3 +939,944 @@
     </script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mediation Reports | DAR Admin</title>
+    <link rel="icon" type="image/png" href="Assets/images/logo.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .serif { font-family: 'Instrument Serif', serif; }
+
+        body { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        body.fade-out { animation: fadeOut 0.3s ease-in-out forwards; }
+        @keyframes fadeOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-8px); } }
+
+        .form-input {
+            width: 100%; padding: 0.7rem 1rem;
+            border: 1px solid #d1fae5; border-radius: 0.65rem;
+            font-size: 0.85rem; font-family: 'Inter', sans-serif;
+            color: #1e293b; outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s; background: white;
+        }
+        .form-input:focus { border-color: #16a34a; box-shadow: 0 0 0 3px rgba(22,163,74,0.1); }
+        .form-input::placeholder { color: #94a3b8; }
+
+        .form-label {
+            display: block; font-size: 10px; font-weight: 700;
+            letter-spacing: 0.12em; text-transform: uppercase;
+            color: #166534; margin-bottom: 5px;
+        }
+        .form-section {
+            background: white; border: 1px solid #d1fae5;
+            border-radius: 1rem; padding: 1.1rem 1.25rem; position: relative;
+        }
+        .form-section-label {
+            position: absolute; top: -10px; left: 14px;
+            background: white; padding: 0 6px;
+            font-size: 9px; font-weight: 800;
+            letter-spacing: 0.15em; text-transform: uppercase; color: #16a34a;
+        }
+
+        /* STATUS BADGES */
+        .status-badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+        .status-pending  { background: #fef9c3; color: #854d0e; }
+        .status-ongoing  { background: #dbeafe; color: #1e40af; }
+        .status-resolved { background: #dcfce7; color: #166534; }
+        .status-failed   { background: #fee2e2; color: #991b1b; }
+
+        /* VIEW TABS */
+        .view-tab {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 0.5rem 1rem; border-radius: 0.6rem;
+            font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+            text-transform: uppercase; cursor: pointer; transition: all 0.2s;
+            border: 1.5px solid transparent; background: transparent; color: #94a3b8;
+        }
+        .view-tab.active { background: white; border-color: #e2e8f0; color: #0f172a; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+        .view-tab:not(.active):hover { background: #f8fafc; color: #64748b; }
+
+        .tab-count {
+            display: inline-flex; align-items: center; justify-content: center;
+            min-width: 20px; height: 18px; border-radius: 999px;
+            font-size: 10px; font-weight: 800; padding: 0 5px;
+        }
+
+        /* TABLE */
+        .case-row { cursor: pointer; transition: background 0.15s; }
+        .case-row:hover td { background: #f0fdf4; }
+
+        .merge-header { cursor: pointer; transition: background 0.15s; }
+        .merge-header:hover td { background: #ecfdf5; }
+
+        .sub-row { cursor: pointer; transition: background 0.15s; }
+        .sub-row:hover td { background: #f0fdf4; }
+
+        /* MODAL */
+        #case-modal {
+            display: none; position: fixed; inset: 0;
+            background: rgba(15,23,42,0.55); backdrop-filter: blur(6px);
+            z-index: 1000; align-items: center; justify-content: center; padding: 1rem;
+        }
+        #case-modal.open { display: flex; }
+        .modal-box {
+            background: white; border-radius: 1.5rem;
+            width: 100%; max-width: 680px; max-height: 90vh; overflow-y: auto;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.2);
+            animation: modalIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        @keyframes modalIn { from { opacity:0; transform:scale(0.92) translateY(20px); } to { opacity:1; transform:scale(1) translateY(0); } }
+
+        .modal-tab-btn {
+            padding: 0.5rem 1.1rem; font-size: 11px; font-weight: 700;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            border-radius: 0.5rem; transition: all 0.2s;
+            color: #94a3b8; background: transparent; border: none; cursor: pointer;
+        }
+        .modal-tab-btn.active { background: #16a34a; color: white; }
+        .modal-tab-btn:not(.active):hover { color: #16a34a; }
+        .modal-tab-content { display: none; }
+        .modal-tab-content.active { display: block; }
+
+        .detail-row { display:flex; flex-direction:column; gap:2px; padding:0.65rem 0; border-bottom:1px solid #f1f5f9; }
+        .detail-row:last-child { border-bottom:none; }
+        .detail-key { font-size:10px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:#94a3b8; }
+        .detail-val { font-size:14px; color:#1e293b; font-weight:500; }
+
+        /* MEDIATION REPORT PRINT AREA */
+        .report-paper {
+            background: white; border: 1px solid #e2e8f0;
+            border-radius: 0.75rem; padding: 2rem;
+            font-family: 'Times New Roman', serif;
+        }
+        .report-paper h1 { font-size: 15px; font-weight: 700; text-transform: uppercase; text-align: center; }
+        .report-paper h2 { font-size: 13px; font-weight: 700; text-transform: uppercase; text-align: center; margin-top: 4px; }
+        .report-paper .subtitle { font-size: 12px; text-align: center; color: #64748b; margin-top: 2px; }
+        .report-paper hr { border: none; border-top: 2px solid #0f172a; margin: 12px 0; }
+        .report-field { display: flex; gap: 8px; margin-bottom: 10px; font-size: 13px; }
+        .report-field .label { font-weight: 700; min-width: 160px; flex-shrink: 0; }
+        .report-field .value { flex: 1; border-bottom: 1px solid #334155; min-height: 20px; padding-bottom: 2px; }
+        .report-section-title { font-size: 12px; font-weight: 700; text-transform: uppercase; margin: 16px 0 8px; letter-spacing: 0.08em; }
+        .sig-row { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2.5rem; }
+        .sig-block { text-align: center; }
+        .sig-line { border-top: 1px solid #334155; margin-top: 2.5rem; padding-top: 4px; font-size: 12px; font-weight: 700; }
+
+        @media print {
+            body * { visibility: hidden; }
+            #print-area, #print-area * { visibility: visible; }
+            #print-area { position: fixed; inset: 0; padding: 2rem; }
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed; bottom: 2rem; right: 2rem;
+            background: #166534; color: white;
+            padding: 1rem 1.5rem; border-radius: 1rem;
+            font-size: 0.875rem; font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transform: translateY(100px); opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+            z-index: 9999; display: flex; align-items: center; gap: 0.5rem;
+        }
+        .toast.show { transform: translateY(0); opacity: 1; }
+
+        .caseno-combo { display:flex; gap:6px; }
+        .caseno-combo select { width:110px; flex-shrink:0; }
+        .caseno-combo input { flex:1; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+    <!-- NAV -->
+    <nav class="relative z-50" style="background: linear-gradient(135deg, #15803d 0%, #166534 60%, #14532d 100%); box-shadow: 0 4px 24px rgba(0,0,0,0.18); border-radius: 0 0 1.5rem 1.5rem;">
+        <div class="h-1 w-full" style="background: linear-gradient(90deg, #4ade80, #16a34a, #4ade80);"></div>
+        <div class="flex justify-between items-center px-6 md:px-12 py-4">
+            <div class="flex items-center space-x-4">
+                <div class="bg-white rounded-full p-1 shadow-md flex-shrink-0">
+                    <img src="Assets/images/logo.png" alt="DAR Logo" class="h-10 md:h-12 w-auto object-contain">
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-base md:text-lg font-extrabold tracking-tight uppercase leading-tight text-white">Department of Agrarian Reform</span>
+                    <span class="text-xs text-green-200 tracking-widest uppercase font-medium">Legal Division — Admin Dashboard</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="index.html" id="portal-link"
+                   class="text-xs font-bold uppercase tracking-widest text-green-200 hover:text-white transition-colors flex items-center gap-1.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    Back to Portal
+                </a>
+                <div class="w-px h-5 bg-green-400/50"></div>
+                <div class="flex items-center gap-2">
+                    <div class="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                        </svg>
+                    </div>
+                    <span class="text-xs font-semibold text-green-100">Admin</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-6 md:px-12 py-10">
+        <div class="mb-8">
+            <span class="text-xs font-bold tracking-widest uppercase text-green-700">Admin Panel</span>
+            <h1 class="text-4xl serif mt-1 text-slate-900">Mediation Reports</h1>
+            <p class="text-slate-500 mt-1 text-sm">Manage and track all mediation cases. Click any row to view, edit, or print a report.</p>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+
+            <!-- ── ADD FORM ── -->
+            <div class="xl:col-span-1">
+                <div class="rounded-2xl overflow-hidden shadow-md border border-green-100 sticky top-6"
+                     style="background: linear-gradient(160deg, #f0fdf4 0%, #ffffff 60%);">
+                    <div class="bg-green-700 px-6 py-5">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-white font-bold text-sm">New Mediation Report</p>
+                                <p class="text-green-200 text-xs">Fill in all required fields</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-5">
+                        <form id="reportForm" class="space-y-4">
+                            <div class="form-section space-y-3">
+                                <span class="form-section-label">Case Information</span>
+                                <div>
+                                    <label class="form-label">Case No.</label>
+                                    <div class="caseno-combo">
+                                        <select id="caseType" class="form-input">
+                                            <option value="ALI">ALI</option>
+                                            <option value="LRC">LRC</option>
+                                            <option value="Others">Others</option>
+                                        </select>
+                                        <input type="text" id="caseNum" class="form-input" placeholder="e.g. 2026-001">
+                                    </div>
+                                    <p class="text-[10px] text-slate-400 mt-1 pl-1">Select type then enter the case number</p>
+                                </div>
+                                <div>
+                                    <label class="form-label">Subject Lot No.</label>
+                                    <input type="text" id="lotNo" class="form-input" placeholder="e.g. Lot 123-A">
+                                </div>
+                                <div>
+                                    <label class="form-label">Date of Mediation</label>
+                                    <input type="date" id="mediationDate" class="form-input">
+                                </div>
+                                <div>
+                                    <label class="form-label">Place of Mediation</label>
+                                    <input type="text" id="placeOfMediation" class="form-input" placeholder="e.g. DAR Office, Legazpi City">
+                                </div>
+                                <div>
+                                    <label class="form-label">Location of Property</label>
+                                    <div class="space-y-2">
+                                        <input type="text" id="propBrgy" class="form-input" placeholder="Barangay">
+                                        <select id="propCity" class="form-input">
+                                            <option value="">City / Municipality</option>
+                                            <optgroup label="1st District"><option>Tiwi</option><option>Malinao</option><option>Malilipot</option><option>Bacacay</option><option>Sto. Domingo</option></optgroup>
+                                            <optgroup label="2nd District"><option>Daraga</option><option>Camalig</option><option>Rapu-Rapu</option><option>Manito</option></optgroup>
+                                            <optgroup label="3rd District"><option>Guinobatan</option><option>Oas</option><option>Jovellar</option><option>Pioduran</option><option>Polangui</option><option>Libon</option></optgroup>
+                                        </select>
+                                        <input type="text" class="form-input bg-slate-50 text-slate-400" value="Albay" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-section space-y-3">
+                                <span class="form-section-label">Parties Involved</span>
+                                <div>
+                                    <label class="form-label">Complainant (Party A)</label>
+                                    <input type="text" id="partyA" class="form-input" placeholder="Full name">
+                                </div>
+                                <div>
+                                    <label class="form-label">Respondent (Party B)</label>
+                                    <input type="text" id="partyB" class="form-input" placeholder="Full name">
+                                </div>
+                                <div>
+                                    <label class="form-label">Issue</label>
+                                    <textarea id="issue" rows="2" class="form-input resize-none" placeholder="e.g. Land ownership dispute..."></textarea>
+                                </div>
+                            </div>
+                            <div class="form-section space-y-3">
+                                <span class="form-section-label">Assignment</span>
+                                <div>
+                                    <label class="form-label">Mediation Officer</label>
+                                    <input type="text" id="officer" class="form-input" placeholder="e.g. Atty. Monilla">
+                                </div>
+                                <div>
+                                    <label class="form-label">Status</label>
+                                    <select id="status" class="form-input" onchange="toggleOthersInput(this, 'status-others')">
+                                        <option value="">Select Status</option>
+                                        <option value="Amicable Settlement">Amicable Settlement</option>
+                                        <option value="Settlement Repudiated">Settlement Repudiated</option>
+                                        <option value="Others">Others</option>
+                                    </select>
+                                    <input type="text" id="status-others" class="form-input mt-2" placeholder="Please specify..." style="display:none;">
+                                </div>
+                            </div>
+                            <button type="submit"
+                                    class="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-3.5 rounded-xl transition-all text-sm tracking-wide flex items-center justify-center gap-2 shadow-lg shadow-green-700/20">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                                Add Report
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── TABLE PANEL ── -->
+            <div class="xl:col-span-2 space-y-4">
+
+                <!-- View Tabs: All Cases / Merged / Single -->
+                <div class="bg-slate-100 rounded-xl p-1 flex gap-1 flex-wrap">
+                    <button class="view-tab active" onclick="switchView('all', this)">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+                        All Cases
+                        <span id="count-all" class="tab-count bg-slate-200 text-slate-600">0</span>
+                    </button>
+                    <button class="view-tab" onclick="switchView('merged', this)">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        Merged
+                        <span id="count-merged" class="tab-count bg-yellow-100 text-yellow-700">0</span>
+                    </button>
+                    <button class="view-tab" onclick="switchView('single', this)">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                        Single
+                        <span id="count-single" class="tab-count bg-blue-100 text-blue-700">0</span>
+                    </button>
+                </div>
+
+                <!-- Search & Filter -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col sm:flex-row gap-3 shadow-sm">
+                    <div class="relative flex-1">
+                        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                        <input type="text" id="search" class="form-input pl-9" style="border-color:#e2e8f0;" placeholder="Search case no., lot no., party, issue...">
+                    </div>
+                    <select id="filter-municipality" class="form-input sm:w-52" style="border-color:#e2e8f0;">
+                        <option value="">All Municipalities</option>
+                        <optgroup label="1st District"><option>Tiwi</option><option>Malinao</option><option>Malilipot</option><option>Bacacay</option><option>Sto. Domingo</option></optgroup>
+                        <optgroup label="2nd District"><option>Daraga</option><option>Camalig</option><option>Rapu-Rapu</option><option>Manito</option></optgroup>
+                        <optgroup label="3rd District"><option>Guinobatan</option><option>Oas</option><option>Jovellar</option><option>Pioduran</option><option>Polangui</option><option>Libon</option></optgroup>
+                    </select>
+                </div>
+
+                <p class="text-xs text-slate-400 italic px-1">💡 Click any row to view, edit, or print a mediation report.</p>
+
+                <!-- Table -->
+                <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead id="table-head">
+                                <tr class="border-b border-slate-100 bg-slate-50">
+                                    <th class="text-left px-5 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">Parties</th>
+                                    <th class="text-left px-5 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">Case No.</th>
+                                    <th class="text-left px-5 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">Lot No.</th>
+                                    <th class="text-left px-5 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">Issue</th>
+                                    <th class="text-left px-5 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">Municipality</th>
+                                    <th class="text-left px-5 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                                <tr id="empty-row">
+                                    <td colspan="6" class="text-center py-16 text-slate-400 text-sm italic">No reports yet. Add your first mediation report.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── CASE MODAL ── -->
+    <div id="case-modal">
+        <div class="modal-box">
+            <!-- Header -->
+            <div class="flex items-start justify-between p-6 border-b border-slate-100" style="background: linear-gradient(135deg,#f0fdf4,#ffffff); border-radius: 1.5rem 1.5rem 0 0;">
+                <div>
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-green-700 mb-1">Mediation Case</p>
+                    <h2 id="modal-case-no" class="text-2xl serif text-slate-900"></h2>
+                    <div id="modal-status-badge" class="mt-2"></div>
+                </div>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-700 transition-colors p-1 rounded-lg hover:bg-slate-100 mt-1">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+
+            <!-- Modal Tabs -->
+            <div class="flex gap-1 px-5 pt-4 border-b border-slate-100 pb-0 flex-wrap">
+                <button class="modal-tab-btn active" onclick="switchModalTab('details', this)">📋 Details</button>
+                <button class="modal-tab-btn" onclick="switchModalTab('edit', this)">✏️ Edit</button>
+                <button class="modal-tab-btn" onclick="switchModalTab('report', this)">📄 Mediation Report</button>
+            </div>
+
+            <!-- Details Tab -->
+            <div id="modal-tab-details" class="modal-tab-content active px-6 py-5">
+                <div id="detail-rows"></div>
+                <div class="mt-6 pt-4 border-t border-slate-100">
+                    <button id="delete-btn"
+                            class="w-full flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 font-bold py-3 rounded-xl text-sm transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        Delete This Case
+                    </button>
+                </div>
+            </div>
+
+            <!-- Edit Tab -->
+            <div id="modal-tab-edit" class="modal-tab-content px-6 py-5">
+                <form id="editForm" class="space-y-4">
+                    <input type="hidden" id="edit-id">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div><label class="form-label">Case Type</label><select id="edit-caseType" class="form-input"><option value="ALI">ALI</option><option value="LRC">LRC</option><option value="Others">Others</option></select></div>
+                        <div><label class="form-label">Case Number</label><input type="text" id="edit-caseNum" class="form-input"></div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div><label class="form-label">Subject Lot No.</label><input type="text" id="edit-lotNo" class="form-input"></div>
+                        <div><label class="form-label">Date</label><input type="date" id="edit-date" class="form-input"></div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div><label class="form-label">Complainant (Party A)</label><input type="text" id="edit-partyA" class="form-input"></div>
+                        <div><label class="form-label">Respondent (Party B)</label><input type="text" id="edit-partyB" class="form-input"></div>
+                    </div>
+                    <div><label class="form-label">Issue</label><textarea id="edit-issue" rows="2" class="form-input resize-none"></textarea></div>
+                    <div><label class="form-label">Mediation Officer</label><input type="text" id="edit-officer" class="form-input"></div>
+                    <div>
+                        <label class="form-label">Status</label>
+                        <select id="edit-status" class="form-input" onchange="toggleOthersInput(this, 'edit-status-others')">
+                            <option value="">Select Status</option>
+                            <option value="Amicable Settlement">Amicable Settlement</option>
+                            <option value="Settlement Repudiated">Settlement Repudiated</option>
+                            <option value="Others">Others</option>
+                        </select>
+                        <input type="text" id="edit-status-others" class="form-input mt-2" placeholder="Please specify..." style="display:none;">
+                    </div>
+                    <div>
+                        <label class="form-label">Place of Mediation</label>
+                        <input type="text" id="edit-placeOfMediation" class="form-input" placeholder="e.g. DAR Office, Legazpi City">
+                    </div>
+                    <div>
+                        <label class="form-label">Location of Property</label>
+                        <div class="space-y-2">
+                            <input type="text" id="edit-propBrgy" class="form-input" placeholder="Barangay">
+                            <select id="edit-propCity" class="form-input">
+                                <option value="">City / Municipality</option>
+                                <optgroup label="1st District"><option>Tiwi</option><option>Malinao</option><option>Malilipot</option><option>Bacacay</option><option>Sto. Domingo</option></optgroup>
+                                <optgroup label="2nd District"><option>Daraga</option><option>Camalig</option><option>Rapu-Rapu</option><option>Manito</option></optgroup>
+                                <optgroup label="3rd District"><option>Guinobatan</option><option>Oas</option><option>Jovellar</option><option>Pioduran</option><option>Polangui</option><option>Libon</option></optgroup>
+                            </select>
+                            <input type="text" class="form-input bg-slate-50 text-slate-400" value="Albay" disabled>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3.5 rounded-xl transition-all text-sm tracking-wide flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        Save Changes
+                    </button>
+                </form>
+            </div>
+
+            <!-- Mediation Report Tab -->
+            <div id="modal-tab-report" class="modal-tab-content px-6 py-5">
+                <div class="flex justify-end mb-4">
+                    <button onclick="printReport()"
+                            class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-bold px-4 py-2 rounded-xl text-xs tracking-wide transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                        Print Report
+                    </button>
+                </div>
+                <div id="print-area" class="report-paper">
+                    <h1>Republic of the Philippines</h1>
+                    <h2>Department of Agrarian Reform</h2>
+                    <p class="subtitle">Legal Division — Province of Albay</p>
+                    <hr>
+                    <h2 style="font-size:14px; margin-bottom:4px;">MEDIATION REPORT</h2>
+                    <hr>
+
+                    <p class="report-section-title">I. Case Information</p>
+                    <div class="report-field"><span class="label">Case No.:</span><span class="value" id="rpt-caseNo"></span></div>
+                    <div class="report-field"><span class="label">Subject Lot No.:</span><span class="value" id="rpt-lotNo"></span></div>
+                    <div class="report-field"><span class="label">Date of Mediation:</span><span class="value" id="rpt-date"></span></div>
+                    <div class="report-field"><span class="label">Place of Mediation:</span><span class="value" id="rpt-placeOfMediation"></span></div>
+                    <div class="report-field"><span class="label">Location of Property:</span><span class="value" id="rpt-location"></span></div>
+                    <div class="report-field"><span class="label">Status / Outcome:</span><span class="value" id="rpt-status"></span></div>
+
+                    <p class="report-section-title">II. Parties Involved</p>
+                    <div class="report-field"><span class="label">Complainant (Party A):</span><span class="value" id="rpt-partyA"></span></div>
+                    <div class="report-field"><span class="label">Respondent (Party B):</span><span class="value" id="rpt-partyB"></span></div>
+
+                    <p class="report-section-title">III. Nature of the Dispute</p>
+                    <div class="report-field"><span class="label">Issue:</span><span class="value" id="rpt-issue"></span></div>
+
+                    <p class="report-section-title">IV. Mediation Officer</p>
+                    <div class="report-field"><span class="label">Officer in Charge:</span><span class="value" id="rpt-officer"></span></div>
+
+                    <p class="report-section-title">V. Outcome / Remarks</p>
+                    <div class="report-field"><span class="label">Outcome:</span><span class="value" style="min-height:40px;"></span></div>
+
+                    <div class="sig-row">
+                        <div class="sig-block">
+                            <div class="sig-line" id="rpt-partyA-sig"></div>
+                            <p style="font-size:11px; color:#64748b;">Complainant</p>
+                        </div>
+                        <div class="sig-block">
+                            <div class="sig-line" id="rpt-partyB-sig"></div>
+                            <p style="font-size:11px; color:#64748b;">Respondent</p>
+                        </div>
+                    </div>
+                    <div class="sig-row" style="margin-top:1.5rem;">
+                        <div class="sig-block">
+                            <div class="sig-line" id="rpt-officer-sig"></div>
+                            <p style="font-size:11px; color:#64748b;">Mediation Officer</p>
+                        </div>
+                        <div class="sig-block">
+                            <div class="sig-line">ATTY. ZALDY LI. MONILLA</div>
+                            <p style="font-size:11px; color:#64748b;">Chief, Legal Division</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        <span id="toast-msg"></span>
+    </div>
+
+    <script>
+        // ── OTHERS INPUT TOGGLE ───────────────────────────────────
+        function toggleOthersInput(select, inputId) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            input.style.display = select.value === 'Others' ? '' : 'none';
+            if (select.value !== 'Others') input.value = '';
+        }
+
+        // ── NAV TRANSITION ────────────────────────────────────────
+        function navigateTo(url) {
+            document.body.classList.add('fade-out');
+            setTimeout(() => { window.location.href = url; }, 300);
+        }
+        document.getElementById('portal-link').addEventListener('click', function(e) {
+            e.preventDefault(); navigateTo('index.html');
+        });
+
+        // ── STORAGE ───────────────────────────────────────────────
+        const STORAGE_KEY = 'dar_mediation_reports';
+        function getReports()         { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+        function saveReports(reports) { localStorage.setItem(STORAGE_KEY, JSON.stringify(reports)); }
+
+        function normalizeName(n) { return (n||'').trim().toLowerCase().replace(/\s+/g,' '); }
+
+        // ── STATUS BADGE ──────────────────────────────────────────
+        function statusBadge(s) {
+            const m = { 'Pending':'status-pending','Ongoing':'status-ongoing','Resolved':'status-resolved','Failed':'status-failed' };
+            return `<span class="status-badge ${m[s]||''}">${s}</span>`;
+        }
+
+        // ── VIEW STATE ────────────────────────────────────────────
+        let activeView = 'all';
+
+        function switchView(view, btn) {
+            activeView = view;
+            document.querySelectorAll('.view-tab').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderTable();
+            // Hide thead in merged view (shown only when sub-rows are expanded)
+            const thead = document.getElementById('table-head');
+            if (thead) thead.style.display = view === 'merged' ? 'none' : '';
+        }
+
+        // ── COUNTS ────────────────────────────────────────────────
+        function updateCounts(all, merged, single) {
+            document.getElementById('count-all').textContent    = all;
+            document.getElementById('count-merged').textContent = merged;
+            document.getElementById('count-single').textContent = single;
+        }
+
+        // ── RENDER TABLE ──────────────────────────────────────────
+        function renderTable() {
+            const filter   = document.getElementById('search').value.toLowerCase();
+            const filterMun= document.getElementById('filter-municipality').value;
+            const reports  = getReports();
+            const tbody    = document.getElementById('tableBody');
+
+            // Filter
+            const filtered = reports.filter(r => {
+                const q = filter;
+                const matchQ = !q ||
+                    (r.caseNo||'').toLowerCase().includes(q) ||
+                    (r.lotNo||'').toLowerCase().includes(q) ||
+                    (r.issue||'').toLowerCase().includes(q) ||
+                    (r.partyA||'').toLowerCase().includes(q) ||
+                    (r.partyB||'').toLowerCase().includes(q) ||
+                    (r.municipality||'').toLowerCase().includes(q) ||
+                    (r.officer||'').toLowerCase().includes(q);
+                const matchMun = !filterMun || r.municipality === filterMun;
+                return matchQ && matchMun;
+            });
+
+            // Group by normalized partyA for merged/single detection
+            const partyCount = {};
+            filtered.forEach(r => {
+                const k = normalizeName(r.partyA);
+                partyCount[k] = (partyCount[k]||0) + 1;
+            });
+
+            const mergedParties = new Set(Object.keys(partyCount).filter(k => partyCount[k] > 1));
+            const singleCases   = filtered.filter(r => !mergedParties.has(normalizeName(r.partyA)));
+            const mergedCases   = filtered.filter(r =>  mergedParties.has(normalizeName(r.partyA)));
+
+            updateCounts(filtered.length, mergedParties.size, singleCases.length);
+
+            // Clear
+            Array.from(tbody.querySelectorAll('tr:not(#empty-row)')).forEach(r => r.remove());
+            const emptyRow = document.getElementById('empty-row');
+
+            let rowsToRender = [];
+
+            if (activeView === 'all') {
+                // Show thead
+                const theadA = document.getElementById('table-head');
+                if (theadA) theadA.style.display = '';
+                // Show every case individually, no grouping
+                rowsToRender = filtered.slice().reverse();
+                if (rowsToRender.length === 0) {
+                    emptyRow.style.display = '';
+                    emptyRow.querySelector('td').textContent = 'No cases found.';
+                    return;
+                }
+                emptyRow.style.display = 'none';
+                rowsToRender.forEach(r => tbody.appendChild(buildSingleRow(r)));
+
+            } else if (activeView === 'single') {
+                // Show thead
+                const theadS = document.getElementById('table-head');
+                if (theadS) theadS.style.display = '';
+                // Only cases where partyA appears exactly once
+                rowsToRender = singleCases.slice().reverse();
+                if (rowsToRender.length === 0) {
+                    emptyRow.style.display = '';
+                    emptyRow.querySelector('td').textContent = 'No single cases found.';
+                    return;
+                }
+                emptyRow.style.display = 'none';
+                rowsToRender.forEach(r => tbody.appendChild(buildSingleRow(r)));
+
+            } else if (activeView === 'merged') {
+                // Hide thead until user expands a group
+                const thead = document.getElementById('table-head');
+                if (thead) thead.style.display = 'none';
+
+                // Group by partyA, show accordion
+                if (mergedParties.size === 0) {
+                    emptyRow.style.display = '';
+                    emptyRow.querySelector('td').textContent = 'No merged cases found. Add multiple cases with the same complainant name.';
+                    return;
+                }
+                emptyRow.style.display = 'none';
+
+                // Build groups
+                const groups = {};
+                mergedCases.forEach(r => {
+                    const k = normalizeName(r.partyA);
+                    if (!groups[k]) groups[k] = { name: r.partyA.trim(), cases: [] };
+                    groups[k].cases.push(r);
+                });
+
+                Object.values(groups).forEach(group => {
+                    const groupId = 'grp-' + normalizeName(group.name).replace(/[^a-z0-9]/g,'-');
+
+                    // Header row
+                    const headerTr = document.createElement('tr');
+                    headerTr.className = 'merge-header border-b border-slate-100 bg-green-50/50';
+                    headerTr.innerHTML = `
+                        <td class="px-5 py-4 font-bold text-slate-900 text-sm">${group.name}</td>
+                        <td class="px-5 py-4 text-[11px] text-slate-400">${group.cases.length} cases — click to expand</td>
+                        <td colspan="3"></td>
+                        <td class="px-5 py-4 text-right whitespace-nowrap">
+                            <div class="inline-flex items-center gap-2">
+                                <span class="text-[11px] font-bold bg-green-600 text-white px-3 py-1 rounded-full whitespace-nowrap">${group.cases.length} Cases</span>
+                                <svg class="chevron w-4 h-4 text-slate-400 transition-transform duration-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </div>
+                        </td>
+                    `;
+                    headerTr.addEventListener('click', function() {
+                        const rows    = tbody.querySelectorAll('.' + groupId);
+                        const chevron = this.querySelector('.chevron');
+                        const isOpen  = rows.length > 0 && rows[0].style.display !== 'none';
+                        rows.forEach(row => { row.style.display = isOpen ? 'none' : ''; });
+                        chevron.style.transform = isOpen ? '' : 'rotate(180deg)';
+                        // Show thead when any group is expanded
+                        const thead = document.getElementById('table-head');
+                        const anyOpen = Array.from(tbody.querySelectorAll('[class*="grp-"]'))
+                            .some(r => r.style.display !== 'none');
+                        if (thead) thead.style.display = anyOpen ? '' : 'none';
+                    });
+                    tbody.appendChild(headerTr);
+
+                    // Sub-rows
+                    group.cases.forEach(r => {
+                        const subTr = document.createElement('tr');
+                        subTr.className = `${groupId} sub-row border-b border-slate-50 bg-white`;
+                        subTr.style.display = 'none';
+                        subTr.innerHTML = `
+                            <td class="pl-16 pr-5 py-3">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-1 h-7 rounded-full bg-green-300 flex-shrink-0"></div>
+                                    <div>
+                                        <p class="text-[11px] text-slate-500">vs. <span class="font-semibold text-slate-700">${r.partyB}</span></p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-5 py-3 font-mono text-xs font-bold text-green-700 whitespace-nowrap">${r.caseNo}</td>
+                            <td class="px-5 py-3 text-xs text-slate-500 whitespace-nowrap">${r.lotNo||'—'}</td>
+                            <td class="px-5 py-3 text-xs text-slate-500 max-w-[140px]" title="${r.issue||''}">
+                                <span style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${r.issue||'—'}</span>
+                            </td>
+                            <td class="px-5 py-3 text-xs text-slate-500 whitespace-nowrap">${r.municipality}</td>
+                            <td class="px-5 py-3 text-xs text-slate-400 whitespace-nowrap">${r.date}</td>
+                        `;
+                        subTr.addEventListener('click', e => { e.stopPropagation(); openModal(r.id); });
+                        tbody.appendChild(subTr);
+                    });
+                });
+            }
+        }
+
+        function buildSingleRow(r) {
+            const tr = document.createElement('tr');
+            tr.className = 'case-row border-b border-slate-100';
+            tr.innerHTML = `
+                <td class="px-5 py-3.5">
+                    <p class="font-semibold text-slate-900 text-xs">${r.partyA}</p>
+                    <p class="text-slate-400 text-[11px] mt-0.5">vs. ${r.partyB}</p>
+                </td>
+                <td class="px-5 py-3.5 font-mono text-xs font-bold text-green-700 whitespace-nowrap">${r.caseNo}</td>
+                <td class="px-5 py-3.5 text-xs text-slate-500 whitespace-nowrap">${r.lotNo||'—'}</td>
+                <td class="px-5 py-3.5 text-xs text-slate-500 max-w-[140px]" title="${r.issue||''}">
+                    <span style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${r.issue||'—'}</span>
+                </td>
+                <td class="px-5 py-3.5 text-xs text-slate-500 whitespace-nowrap">${r.municipality}</td>
+                <td class="px-5 py-3.5 text-xs text-slate-400 whitespace-nowrap">${r.date}</td>
+            `;
+            tr.addEventListener('click', () => openModal(r.id));
+            return tr;
+        }
+
+        // ── ADD REPORT ────────────────────────────────────────────
+        document.getElementById('reportForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const caseType = document.getElementById('caseType').value;
+            const caseNum  = document.getElementById('caseNum').value.trim();
+            const statusVal    = document.getElementById('status').value;
+            const statusOthers = document.getElementById('status-others').value.trim();
+            const finalStatus  = statusVal === 'Others' && statusOthers ? `Others: ${statusOthers}` : statusVal;
+
+            const report = {
+                id:               Date.now().toString(),
+                caseNo:           `${caseType}-${caseNum}`,
+                caseType, caseNum,
+                lotNo:            document.getElementById('lotNo').value.trim(),
+                partyA:           document.getElementById('partyA').value.trim(),
+                partyB:           document.getElementById('partyB').value.trim(),
+                issue:            document.getElementById('issue').value.trim(),
+                officer:          document.getElementById('officer').value.trim(),
+                date:             document.getElementById('mediationDate').value,
+                placeOfMediation: document.getElementById('placeOfMediation').value.trim(),
+                propBrgy:         document.getElementById('propBrgy').value.trim(),
+                propCity:         document.getElementById('propCity').value,
+                propProvince:     'Albay',
+                municipality:     document.getElementById('propCity').value,
+                status:           finalStatus,
+                createdAt:        new Date().toISOString(),
+            };
+            const reports = getReports();
+            reports.push(report);
+            saveReports(reports);
+            this.reset();
+            renderTable();
+            showToast('Report added successfully!');
+        });
+
+        // ── MODAL ─────────────────────────────────────────────────
+        let currentId = null;
+
+        function openModal(id) {
+            const r = getReports().find(r => r.id === id);
+            if (!r) return;
+            currentId = id;
+
+            document.getElementById('modal-case-no').textContent = r.caseNo;
+            document.getElementById('modal-status-badge').innerHTML = statusBadge(r.status);
+
+            // Details
+            const locStr = [r.propBrgy, r.propCity, 'Albay'].filter(Boolean).join(', ') || '—';
+            document.getElementById('detail-rows').innerHTML = [
+                ['Case No.',            r.caseNo  || '—'],
+                ['Subject Lot No.',     r.lotNo   || '—'],
+                ['Complainant',         r.partyA  || '—'],
+                ['Respondent',          r.partyB  || '—'],
+                ['Issue',               r.issue   || '—'],
+                ['Mediation Officer',   r.officer || '—'],
+                ['Date',                r.date    || '—'],
+                ['Place of Mediation',  r.placeOfMediation || '—'],
+                ['Location of Property',locStr],
+                ['Status',              r.status  || '—'],
+            ].map(([k,v]) => `
+                <div class="detail-row">
+                    <span class="detail-key">${k}</span>
+                    <span class="detail-val">${k==='Status' ? statusBadge(v) : v}</span>
+                </div>`).join('');
+
+            // Edit fields
+            document.getElementById('edit-id').value                = r.id;
+            document.getElementById('edit-caseType').value          = r.caseType || 'ALI';
+            document.getElementById('edit-caseNum').value           = r.caseNum  || r.caseNo;
+            document.getElementById('edit-lotNo').value             = r.lotNo    || '';
+            document.getElementById('edit-partyA').value            = r.partyA   || '';
+            document.getElementById('edit-partyB').value            = r.partyB   || '';
+            document.getElementById('edit-issue').value             = r.issue    || '';
+            document.getElementById('edit-officer').value           = r.officer  || '';
+            document.getElementById('edit-date').value              = r.date     || '';
+            document.getElementById('edit-placeOfMediation').value  = r.placeOfMediation || '';
+            document.getElementById('edit-propBrgy').value          = r.propBrgy || '';
+            document.getElementById('edit-propCity').value          = r.propCity || '';
+
+            // Handle status with Others
+            const editStatusSel    = document.getElementById('edit-status');
+            const editStatusOthers = document.getElementById('edit-status-others');
+            if (r.status && r.status.startsWith('Others:')) {
+                editStatusSel.value = 'Others';
+                editStatusOthers.value = r.status.replace('Others: ', '').replace('Others:','').trim();
+                editStatusOthers.style.display = '';
+            } else {
+                editStatusSel.value = r.status || '';
+                editStatusOthers.style.display = 'none';
+                editStatusOthers.value = '';
+            }
+
+            // Report fields
+            const locationStr = [r.propBrgy, r.propCity, 'Albay'].filter(Boolean).join(', ') || '—';
+            document.getElementById('rpt-caseNo').textContent           = r.caseNo || '—';
+            document.getElementById('rpt-lotNo').textContent            = r.lotNo  || '—';
+            document.getElementById('rpt-date').textContent             = r.date   || '—';
+            document.getElementById('rpt-placeOfMediation').textContent = r.placeOfMediation || '—';
+            document.getElementById('rpt-location').textContent         = locationStr;
+            document.getElementById('rpt-status').textContent           = r.status || '—';
+            document.getElementById('rpt-partyA').textContent           = r.partyA || '—';
+            document.getElementById('rpt-partyB').textContent           = r.partyB || '—';
+            document.getElementById('rpt-issue').textContent            = r.issue  || '—';
+            document.getElementById('rpt-officer').textContent          = r.officer|| '—';
+            document.getElementById('rpt-partyA-sig').textContent       = (r.partyA||'').toUpperCase();
+            document.getElementById('rpt-partyB-sig').textContent       = (r.partyB||'').toUpperCase();
+            document.getElementById('rpt-officer-sig').textContent      = (r.officer||'').toUpperCase();
+
+            // Reset to details tab
+            switchModalTab('details', document.querySelector('.modal-tab-btn'));
+            document.getElementById('case-modal').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('case-modal').classList.remove('open');
+            document.body.style.overflow = '';
+            currentId = null;
+        }
+
+        document.getElementById('case-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // ── MODAL TABS ────────────────────────────────────────────
+        function switchModalTab(tab, btn) {
+            document.querySelectorAll('.modal-tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.modal-tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`modal-tab-${tab}`).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        // ── EDIT SAVE ─────────────────────────────────────────────
+        document.getElementById('editForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const id      = document.getElementById('edit-id').value;
+            const reports = getReports();
+            const idx     = reports.findIndex(r => r.id === id);
+            if (idx === -1) return;
+            const caseType = document.getElementById('edit-caseType').value;
+            const caseNum  = document.getElementById('edit-caseNum').value.trim();
+            const editStatusVal    = document.getElementById('edit-status').value;
+            const editStatusOthers = document.getElementById('edit-status-others').value.trim();
+            const editFinalStatus  = editStatusVal === 'Others' && editStatusOthers ? `Others: ${editStatusOthers}` : editStatusVal;
+            const editCity         = document.getElementById('edit-propCity').value;
+            reports[idx] = {
+                ...reports[idx],
+                caseNo:           `${caseType}-${caseNum}`,
+                caseType, caseNum,
+                lotNo:            document.getElementById('edit-lotNo').value.trim(),
+                partyA:           document.getElementById('edit-partyA').value.trim(),
+                partyB:           document.getElementById('edit-partyB').value.trim(),
+                issue:            document.getElementById('edit-issue').value.trim(),
+                officer:          document.getElementById('edit-officer').value.trim(),
+                date:             document.getElementById('edit-date').value,
+                placeOfMediation: document.getElementById('edit-placeOfMediation').value.trim(),
+                propBrgy:         document.getElementById('edit-propBrgy').value.trim(),
+                propCity:         editCity,
+                propProvince:     'Albay',
+                municipality:     editCity,
+                status:           editFinalStatus,
+                updatedAt:        new Date().toISOString(),
+            };
+            saveReports(reports);
+            closeModal();
+            renderTable();
+            showToast('Case updated successfully!');
+        });
+
+        // ── DELETE ────────────────────────────────────────────────
+        document.getElementById('delete-btn').addEventListener('click', function() {
+            if (!currentId) return;
+            if (!confirm('Delete this case? This cannot be undone.')) return;
+            saveReports(getReports().filter(r => r.id !== currentId));
+            closeModal();
+            renderTable();
+            showToast('Case deleted.');
+        });
+
+        // ── PRINT REPORT ──────────────────────────────────────────
+        function printReport() {
+            window.print();
+        }
+
+        // ── FILTERS ───────────────────────────────────────────────
+        document.getElementById('search').addEventListener('input', renderTable);
+        document.getElementById('filter-municipality').addEventListener('change', renderTable);
+
+        // ── TOAST ─────────────────────────────────────────────────
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // ── INIT ──────────────────────────────────────────────────
+        renderTable();
+    </script>
+</body>
+</html>
