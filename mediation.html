@@ -583,6 +583,9 @@
             let rowsToRender = [];
 
             if (activeView === 'all') {
+                // Show thead
+                const theadA = document.getElementById('table-head');
+                if (theadA) theadA.style.display = '';
                 // Show every case individually, no grouping
                 rowsToRender = filtered.slice().reverse();
                 if (rowsToRender.length === 0) {
@@ -594,6 +597,9 @@
                 rowsToRender.forEach(r => tbody.appendChild(buildSingleRow(r)));
 
             } else if (activeView === 'single') {
+                // Show thead
+                const theadS = document.getElementById('table-head');
+                if (theadS) theadS.style.display = '';
                 // Only cases where partyA appears exactly once
                 rowsToRender = singleCases.slice().reverse();
                 if (rowsToRender.length === 0) {
@@ -605,6 +611,10 @@
                 rowsToRender.forEach(r => tbody.appendChild(buildSingleRow(r)));
 
             } else if (activeView === 'merged') {
+                // Hide thead until user expands a group
+                const thead = document.getElementById('table-head');
+                if (thead) thead.style.display = 'none';
+
                 // Group by partyA, show accordion
                 if (mergedParties.size === 0) {
                     emptyRow.style.display = '';
