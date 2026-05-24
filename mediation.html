@@ -145,6 +145,10 @@
         .toast.show { transform: translateY(0); opacity: 1; }
 
         .caseno-combo { display:flex; gap:6px; }
+
+        /* Style placeholder option as gray hint */
+        select option[value=""] { color: #94a3b8; }
+        select:invalid, select option:checked[value=""] { color: #94a3b8; }
         .caseno-combo select { width:110px; flex-shrink:0; }
         .caseno-combo input { flex:1; }
     </style>
@@ -244,10 +248,26 @@
                                     <div class="space-y-2">
                                         <input type="text" id="propBrgy" class="form-input" placeholder="Barangay">
                                         <select id="propCity" class="form-input">
-                                            <option value="">City / Municipality</option>
-                                            <optgroup label="1st District"><option>Tiwi</option><option>Malinao</option><option>Malilipot</option><option>Bacacay</option><option>Sto. Domingo</option></optgroup>
-                                            <optgroup label="2nd District"><option>Daraga</option><option>Camalig</option><option>Rapu-Rapu</option><option>Manito</option></optgroup>
-                                            <optgroup label="3rd District"><option>Guinobatan</option><option>Oas</option><option>Jovellar</option><option>Pioduran</option><option>Polangui</option><option>Libon</option></optgroup>
+                                            <option value="" disabled selected hidden>City / Municipality</option>
+                                            <option value="__clear__">— Clear Selection —</option>
+                                            <option>Legazpi City</option>
+                                            <option>Tabaco City</option>
+                                            <option>Ligao City</option>
+                                            <option>Tiwi</option>
+                                            <option>Malinao</option>
+                                            <option>Malilipot</option>
+                                            <option>Bacacay</option>
+                                            <option>Sto. Domingo</option>
+                                            <option>Daraga</option>
+                                            <option>Camalig</option>
+                                            <option>Rapu-Rapu</option>
+                                            <option>Manito</option>
+                                            <option>Guinobatan</option>
+                                            <option>Oas</option>
+                                            <option>Jovellar</option>
+                                            <option>Pioduran</option>
+                                            <option>Polangui</option>
+                                            <option>Libon</option>
                                         </select>
                                         <input type="text" class="form-input bg-slate-50 text-slate-400" value="Albay" disabled>
                                     </div>
@@ -277,7 +297,8 @@
                                 <div>
                                     <label class="form-label">Status</label>
                                     <select id="status" class="form-input" onchange="toggleOthersInput(this, 'status-others')">
-                                        <option value="">Select Status</option>
+                                        <option value="" disabled selected hidden>Select Status</option>
+                                        <option value="__clear__">— Clear Selection —</option>
                                         <option value="Amicable Settlement">Amicable Settlement</option>
                                         <option value="Settlement Repudiated">Settlement Repudiated</option>
                                         <option value="Others">Others</option>
@@ -326,7 +347,8 @@
                     </div>
                     <!-- Month dropdown -->
                     <select id="filter-month" class="form-input sm:w-36" style="border-color:#e2e8f0;">
-                        <option value="">All Months</option>
+                        <option value="" disabled selected hidden>All Months</option>
+                        <option value="__clear__">— Clear —</option>
                         <option value="01">January</option>
                         <option value="02">February</option>
                         <option value="03">March</option>
@@ -342,7 +364,8 @@
                     </select>
                     <!-- Year dropdown -->
                     <select id="filter-year" class="form-input sm:w-28" style="border-color:#e2e8f0;">
-                        <option value="">All Years</option>
+                        <option value="" disabled selected hidden>All Years</option>
+                        <option value="__clear__">— Clear —</option>
                         <option value="2026">2026</option>
                         <option value="2025">2025</option>
                         <option value="2024">2024</option>
@@ -434,7 +457,8 @@
                     <div>
                         <label class="form-label">Status</label>
                         <select id="edit-status" class="form-input" onchange="toggleOthersInput(this, 'edit-status-others')">
-                            <option value="">Select Status</option>
+                            <option value="" disabled selected hidden>Select Status</option>
+                            <option value="__clear__">— Clear Selection —</option>
                             <option value="Amicable Settlement">Amicable Settlement</option>
                             <option value="Settlement Repudiated">Settlement Repudiated</option>
                             <option value="Others">Others</option>
@@ -450,10 +474,26 @@
                         <div class="space-y-2">
                             <input type="text" id="edit-propBrgy" class="form-input" placeholder="Barangay">
                             <select id="edit-propCity" class="form-input">
-                                <option value="">City / Municipality</option>
-                                <optgroup label="1st District"><option>Tiwi</option><option>Malinao</option><option>Malilipot</option><option>Bacacay</option><option>Sto. Domingo</option></optgroup>
-                                <optgroup label="2nd District"><option>Daraga</option><option>Camalig</option><option>Rapu-Rapu</option><option>Manito</option></optgroup>
-                                <optgroup label="3rd District"><option>Guinobatan</option><option>Oas</option><option>Jovellar</option><option>Pioduran</option><option>Polangui</option><option>Libon</option></optgroup>
+                                <option value="" disabled selected hidden>City / Municipality</option>
+                                <option value="__clear__">— Clear Selection —</option>
+                                <option>Legazpi City</option>
+                                <option>Tabaco City</option>
+                                <option>Ligao City</option>
+                                <option>Tiwi</option>
+                                <option>Malinao</option>
+                                <option>Malilipot</option>
+                                <option>Bacacay</option>
+                                <option>Sto. Domingo</option>
+                                <option>Daraga</option>
+                                <option>Camalig</option>
+                                <option>Rapu-Rapu</option>
+                                <option>Manito</option>
+                                <option>Guinobatan</option>
+                                <option>Oas</option>
+                                <option>Jovellar</option>
+                                <option>Pioduran</option>
+                                <option>Polangui</option>
+                                <option>Libon</option>
                             </select>
                             <input type="text" class="form-input bg-slate-50 text-slate-400" value="Albay" disabled>
                         </div>
@@ -959,6 +999,37 @@
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
+
+        // ── CLEAR SELECTION HANDLER ──────────────────────────────
+        document.querySelectorAll('select').forEach(sel => {
+            sel.addEventListener('change', function() {
+                if (this.value === '__clear__') {
+                    this.value = '';
+                    // Re-enable the placeholder so it shows
+                    const placeholder = this.querySelector('option[value=""]');
+                    if (placeholder) {
+                        placeholder.removeAttribute('disabled');
+                        placeholder.setAttribute('selected', true);
+                        this.selectedIndex = 0;
+                        // Re-disable after showing
+                        setTimeout(() => {
+                            if (placeholder) placeholder.setAttribute('disabled', true);
+                        }, 0);
+                    }
+                    // Trigger renderTable if it's a filter dropdown
+                    if (['filter-month','filter-year'].includes(this.id)) renderTable();
+                    // Trigger others toggle reset if status
+                    if (this.id === 'status') {
+                        const othersInput = document.getElementById('status-others');
+                        if (othersInput) { othersInput.style.display = 'none'; othersInput.value = ''; }
+                    }
+                    if (this.id === 'edit-status') {
+                        const othersInput = document.getElementById('edit-status-others');
+                        if (othersInput) { othersInput.style.display = 'none'; othersInput.value = ''; }
+                    }
+                }
+            });
+        });
 
         // ── INIT ──────────────────────────────────────────────────
         renderTable();
