@@ -319,15 +319,35 @@
 
                 <!-- Search & Filter -->
                 <div class="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col sm:flex-row gap-3 shadow-sm">
+                    <!-- Name search -->
                     <div class="relative flex-1">
                         <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                        <input type="text" id="search" class="form-input pl-9" style="border-color:#e2e8f0;" placeholder="Search case no., lot no., party, issue...">
+                        <input type="text" id="search" class="form-input pl-9" style="border-color:#e2e8f0;" placeholder="Search by name, case no., issue...">
                     </div>
-                    <select id="filter-municipality" class="form-input sm:w-52" style="border-color:#e2e8f0;">
-                        <option value="">All Municipalities</option>
-                        <optgroup label="1st District"><option>Tiwi</option><option>Malinao</option><option>Malilipot</option><option>Bacacay</option><option>Sto. Domingo</option></optgroup>
-                        <optgroup label="2nd District"><option>Daraga</option><option>Camalig</option><option>Rapu-Rapu</option><option>Manito</option></optgroup>
-                        <optgroup label="3rd District"><option>Guinobatan</option><option>Oas</option><option>Jovellar</option><option>Pioduran</option><option>Polangui</option><option>Libon</option></optgroup>
+                    <!-- Month dropdown -->
+                    <select id="filter-month" class="form-input sm:w-36" style="border-color:#e2e8f0;">
+                        <option value="">All Months</option>
+                        <option value="01">January</option>
+                        <option value="02">February</option>
+                        <option value="03">March</option>
+                        <option value="04">April</option>
+                        <option value="05">May</option>
+                        <option value="06">June</option>
+                        <option value="07">July</option>
+                        <option value="08">August</option>
+                        <option value="09">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                    <!-- Year dropdown -->
+                    <select id="filter-year" class="form-input sm:w-28" style="border-color:#e2e8f0;">
+                        <option value="">All Years</option>
+                        <option value="2026">2026</option>
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
                     </select>
                 </div>
 
@@ -569,11 +589,13 @@
         // ── RENDER TABLE ──────────────────────────────────────────
         function renderTable() {
             const filter   = document.getElementById('search').value.toLowerCase();
-            const filterMun= document.getElementById('filter-municipality').value;
             const reports  = getReports();
             const tbody    = document.getElementById('tableBody');
 
             // Filter
+            const filterMonth = document.getElementById('filter-month').value;
+            const filterYear  = document.getElementById('filter-year').value;
+
             const filtered = reports.filter(r => {
                 const q = filter;
                 const matchQ = !q ||
@@ -582,16 +604,18 @@
                     (r.issue||'').toLowerCase().includes(q) ||
                     (r.partyA||'').toLowerCase().includes(q) ||
                     (r.partyB||'').toLowerCase().includes(q) ||
-                    (r.municipality||'').toLowerCase().includes(q) ||
                     (r.officer||'').toLowerCase().includes(q);
-                const matchMun = !filterMun || r.municipality === filterMun;
-                return matchQ && matchMun;
+                const matchMonth = !filterMonth || (r.date||'').substring(5,7) === filterMonth;
+                const matchYear  = !filterYear  || (r.date||'').substring(0,4) === filterYear;
+                return matchQ && matchMonth && matchYear;
             });
 
             // Group by normalized partyA for merged/single detection
+            // Only count non-blank names
             const partyCount = {};
             filtered.forEach(r => {
                 const k = normalizeName(r.partyA);
+                if (!k || k.trim() === '') return; // skip blank names
                 partyCount[k] = (partyCount[k]||0) + 1;
             });
 
@@ -648,10 +672,11 @@
                 }
                 emptyRow.style.display = 'none';
 
-                // Build groups
+                // Build groups - skip blank partyA
                 const groups = {};
                 mergedCases.forEach(r => {
                     const k = normalizeName(r.partyA);
+                    if (!k || k.trim() === '') return; // skip blank
                     if (!groups[k]) groups[k] = { name: r.partyA.trim(), cases: [] };
                     groups[k].cases.push(r);
                 });
@@ -924,7 +949,8 @@
 
         // ── FILTERS ───────────────────────────────────────────────
         document.getElementById('search').addEventListener('input', renderTable);
-        document.getElementById('filter-municipality').addEventListener('change', renderTable);
+        document.getElementById('filter-month').addEventListener('change', renderTable);
+        document.getElementById('filter-year').addEventListener('change', renderTable);
 
         // ── TOAST ─────────────────────────────────────────────────
         function showToast(msg) {
