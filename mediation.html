@@ -910,8 +910,35 @@
         // ── ADD REPORT ────────────────────────────────────────────
         document.getElementById('reportForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const caseType = document.getElementById('caseType').value;
-            const caseNum  = document.getElementById('caseNum').value.trim();
+
+            // Check empty fields
+            const emptyFields = [];
+            if (!document.getElementById('caseNum').value.trim())          emptyFields.push('Case No.');
+            if (!document.getElementById('lotNo').value.trim())            emptyFields.push('Subject Lot No.');
+            if (!document.getElementById('partyA').value.trim())           emptyFields.push('Complainant (Party A)');
+            if (!document.getElementById('partyB').value.trim())           emptyFields.push('Respondent (Party B)');
+            if (!document.getElementById('officer').value.trim())          emptyFields.push('Mediation Officer');
+            if (!document.getElementById('mediationDay').value ||
+                !document.getElementById('mediationMonth').value ||
+                !document.getElementById('mediationYear').value)           emptyFields.push('Date of Mediation');
+            if (!document.getElementById('status').value)                  emptyFields.push('Status');
+            if (!document.getElementById('placeOfMediation').value.trim()) emptyFields.push('Place of Mediation');
+            if (!document.getElementById('propBrgy').value.trim())         emptyFields.push('Barangay');
+            if (!document.getElementById('propCity').value)                emptyFields.push('City / Municipality');
+
+            const warningBox  = document.getElementById('form-warning');
+            const warningList = document.getElementById('form-warning-list');
+
+            if (emptyFields.length > 0) {
+                warningList.innerHTML = emptyFields.map(f => `<li>${f}</li>`).join('');
+                warningBox.style.display = '';
+            } else {
+                warningBox.style.display = 'none';
+            }
+
+            // Build and save report regardless
+            const caseType     = document.getElementById('caseType').value;
+            const caseNum      = document.getElementById('caseNum').value.trim();
             const statusVal    = document.getElementById('status').value;
             const statusOthers = document.getElementById('status-others').value.trim();
             const finalStatus  = statusVal === 'Others' && statusOthers ? `Others: ${statusOthers}` : statusVal;
@@ -934,14 +961,15 @@
                 status:           finalStatus,
                 createdAt:        new Date().toISOString(),
             };
+
             const reports = getReports();
             reports.push(report);
             saveReports(reports);
             this.reset();
-            const warningBox = document.getElementById('form-warning');
-            if (warningBox) warningBox.style.display = 'none';
-            // Close add modal only if no warnings
-            if (emptyFields.length === 0) closeAddModal();
+            warningBox.style.display = 'none';
+
+            // Always close modal and refresh table
+            closeAddModal();
             renderTable();
             showToast('Report added successfully!');
         });
