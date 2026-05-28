@@ -190,19 +190,28 @@
     </nav>
 
     <div class="max-w-7xl mx-auto px-6 md:px-12 py-10">
-        <div class="mb-8">
-            <span class="text-xs font-bold tracking-widest uppercase text-green-700">Admin Panel</span>
-            <h1 class="text-4xl serif mt-1 text-slate-900">Mediation Reports</h1>
-            <p class="text-slate-500 mt-1 text-sm">Manage and track all mediation cases. Click any row to view, edit, or print a report.</p>
+        <div class="mb-8 flex items-center justify-between flex-wrap gap-4">
+            <div>
+                <span class="text-xs font-bold tracking-widest uppercase text-green-700">Admin Panel</span>
+                <h1 class="text-4xl serif mt-1 text-slate-900">Mediation Reports</h1>
+                <p class="text-slate-500 mt-1 text-sm">Manage and track all mediation cases. Click any row to view, edit, or print a report.</p>
+            </div>
+            <!-- Add Report Button -->
+            <button onclick="openAddModal()"
+                    class="flex items-center gap-2 bg-green-700 hover:bg-green-800 text-white font-bold px-6 py-3 rounded-xl text-sm shadow-lg shadow-green-700/20 transition-all hover:scale-105">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                New Mediation Report
+            </button>
         </div>
 
-        <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+        <div>
 
-            <!-- ── ADD FORM ── -->
-            <div class="xl:col-span-1">
-                <div class="rounded-2xl overflow-hidden shadow-md border border-green-100 sticky top-6"
-                     style="background: linear-gradient(160deg, #f0fdf4 0%, #ffffff 60%);">
-                    <div class="bg-green-700 px-6 py-5">
+            <!-- ── ADD FORM MODAL ── -->
+            <div id="add-modal" style="display:none;" class="fixed inset-0 z-50 flex items-center justify-center p-4" style="background:rgba(15,23,42,0.55);backdrop-filter:blur(6px);">
+                <div style="background:rgba(15,23,42,0.55);backdrop-filter:blur(6px);position:fixed;inset:0;z-index:-1;" onclick="closeAddModal()"></div>
+                <div class="rounded-2xl overflow-hidden shadow-2xl border border-green-100 w-full max-w-xl max-h-[90vh] overflow-y-auto relative z-10"
+                     style="background: linear-gradient(160deg, #f0fdf4 0%, #ffffff 60%); animation: modalIn 0.3s cubic-bezier(0.34,1.56,0.64,1);">
+                    <div class="bg-green-700 px-6 py-5 flex items-center justify-between">
                         <div class="flex items-center gap-3">
                             <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
                                 <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -211,9 +220,12 @@
                             </div>
                             <div>
                                 <p class="text-white font-bold text-sm">New Mediation Report</p>
-                                <p class="text-green-200 text-xs">Fill in all required fields</p>
+                                <p class="text-green-200 text-xs">Fill in the fields below</p>
                             </div>
                         </div>
+                        <button onclick="closeAddModal()" class="text-white/60 hover:text-white transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </button>
                     </div>
                     <div class="p-5">
                         <form id="reportForm" class="space-y-4">
@@ -339,6 +351,18 @@
                                     <input type="text" id="status-others" class="form-input mt-2" placeholder="Please specify..." style="display:none;">
                                 </div>
                             </div>
+                            <!-- Warning Box -->
+                            <div id="form-warning" style="display:none;" class="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
+                                <div class="flex items-start gap-2">
+                                    <svg class="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+                                    <div>
+                                        <p class="text-xs font-bold text-amber-700 mb-1">The following fields are empty:</p>
+                                        <ul id="form-warning-list" class="text-xs text-amber-600 list-disc list-inside space-y-0.5"></ul>
+                                        <p class="text-xs text-amber-500 mt-1 italic">Record saved — you can edit it anytime.</p>
+                                    </div>
+                                </div>
+                            </div>
+
                             <button type="submit"
                                     class="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-3.5 rounded-xl transition-all text-sm tracking-wide flex items-center justify-center gap-2 shadow-lg shadow-green-700/20">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
@@ -350,7 +374,7 @@
             </div>
 
             <!-- ── TABLE PANEL ── -->
-            <div class="xl:col-span-2 space-y-4">
+            <div class="space-y-4">
 
                 <!-- View Tabs: All Cases / Merged / Single -->
                 <div class="bg-slate-100 rounded-xl p-1 flex gap-1 flex-wrap">
@@ -431,6 +455,7 @@
                         </table>
                     </div>
                 </div>
+            </div>
             </div>
         </div>
     </div>
@@ -645,6 +670,16 @@
     </div>
 
     <script>
+        // ── ADD MODAL OPEN/CLOSE ─────────────────────────────────
+        function openAddModal() {
+            document.getElementById('add-modal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        function closeAddModal() {
+            document.getElementById('add-modal').style.display = 'none';
+            document.body.style.overflow = '';
+        }
+
         // ── OTHERS INPUT TOGGLE ───────────────────────────────────
         function toggleOthersInput(select, inputId) {
             const input = document.getElementById(inputId);
@@ -903,6 +938,10 @@
             reports.push(report);
             saveReports(reports);
             this.reset();
+            const warningBox = document.getElementById('form-warning');
+            if (warningBox) warningBox.style.display = 'none';
+            // Close add modal only if no warnings
+            if (emptyFields.length === 0) closeAddModal();
             renderTable();
             showToast('Report added successfully!');
         });
